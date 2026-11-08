@@ -37,6 +37,10 @@
   --fur: #dcc7a3;          /* Hamdy */
   --fur-dark: #b89c74;
   --lens: #1b2030;
+  --board: #1c2130;        /* departures board */
+  --board-cell: #2b3145;
+  --flap-text: #f4efe2;
+  --flap-amber: #f2b33d;
   --display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   --hand: "Kalam", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
   --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -104,7 +108,7 @@ button { font: inherit; color: inherit; }
 /* ---------- PASSPORT GATE ---------- */
 .gate {
   position: fixed; inset: 0; z-index: 60;
-  display: grid; place-items: center; gap: 18px; align-content: center;
+  display: grid; place-items: center; align-content: safe center; overflow-y: auto;
   background-color: var(--paper); background-image: var(--grain);
   padding: max(20px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(20px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
   transition: opacity .8s ease, visibility .8s;
@@ -149,6 +153,61 @@ button { font: inherit; color: inherit; }
 .pp-cover .tap { font-family: var(--hand); font-size: 1.05rem; opacity: .9; animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .45; } }
 .passport.open .pp-cover { transform: rotateY(-168deg); pointer-events: none; }
+.gate-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: 28px 44px; align-items: center; width: min(1060px, 100%); }
+.lounge { display: grid; gap: 18px; min-width: 0; }
+.desk { display: grid; justify-items: center; gap: 14px; min-width: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* split-flap departures board */
+.board {
+  background: var(--board); color: var(--flap-text);
+  border-radius: 12px; padding: 14px 14px 16px;
+  box-shadow: 0 22px 44px -26px rgba(24, 38, 64, .8);
+  font-family: var(--mono); font-size: clamp(9px, 2.4vw, 15px);
+  overflow-x: auto;
+}
+.board-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: .82em; letter-spacing: .16em; text-transform: uppercase; color: var(--flap-amber); margin-bottom: 10px; }
+.board-head b { font-weight: 500; font-variant-numeric: tabular-nums; }
+.board-row, .board-cols { display: flex; gap: 1.1em; padding-block: 3px; }
+.board-cols span { flex: none; width: calc(var(--w) * (1.15em + 2px)); }
+.board-cols i { font-style: normal; font-size: .62em; letter-spacing: .14em; text-transform: uppercase; color: #a9adbd; }
+.cells { display: flex; gap: 2px; flex: none; }
+.flap {
+  position: relative; width: 1.15em; height: 1.6em; display: grid; place-items: center;
+  background: var(--board-cell); border-radius: 2px; font-weight: 500; line-height: 1;
+}
+.flap::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--board); opacity: .8; }
+.board-row.now .cells { color: var(--flap-amber); }
+.board-row.now.blink .status { animation: blink 1.1s steps(2, jump-none) infinite; }
+@keyframes blink { 50% { opacity: .35; } }
+
+/* boarding announcement */
+.pa { background: #fff; border: 1.5px solid var(--ink); border-radius: 12px; padding: 14px 16px 16px; display: grid; gap: 10px; box-shadow: 3px 3px 0 var(--line); }
+.pa-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.pa-head .eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); }
+.pa-head svg { width: 22px; height: 22px; flex: none; }
+.pa .wave { opacity: .25; transition: opacity .2s; }
+.pa.playing .wave { animation: wave 1s ease-in-out infinite; }
+.pa.playing .wave.w2 { animation-delay: .2s; }
+@keyframes wave { 50% { opacity: 1; } }
+.pa-text { font-family: var(--hand); font-size: 1.12rem; line-height: 1.5; min-height: 7.5em; }
+.pa-text .caret { display: inline-block; width: .45em; height: 1em; margin-left: 2px; vertical-align: -2px; border-bottom: 2px solid var(--ink); animation: blink 1s steps(2, jump-none) infinite; }
+
+/* take-off */
+.takeoff { position: fixed; left: -90px; bottom: 16%; width: 76px; height: 66px; z-index: 70; color: var(--rose); pointer-events: none; opacity: 0; }
+.takeoff.go { animation: takeoff 1.7s cubic-bezier(.55, 0, .7, 1) forwards; }
+@keyframes takeoff {
+  0% { opacity: 1; transform: translate(0, 0) rotate(-6deg) scale(.8); }
+  100% { opacity: 1; transform: translate(calc(100vw + 200px), -60vh) rotate(-24deg) scale(1.5); }
+}
+@media (max-width: 860px) {
+  .gate { align-content: start; }
+  .gate-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .lounge { display: contents; }
+  .board { order: 1; } .pa { order: 2; } .desk { order: 3; padding-bottom: 12px; }
+  .passport { width: min(270px, 72vw); }
+}
+@media (prefers-reduced-motion: reduce) { .board-row.now.blink .status, .pa-text .caret, .pa.playing .wave { animation: none; } }
 .skip { background: none; border: 0; font-family: var(--mono); font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); text-decoration: underline; cursor: pointer; }
 
 /* ---------- HERO ---------- */
@@ -325,6 +384,7 @@ button { font: inherit; color: inherit; }
 }
 .media .hint svg { width: 16px; height: 16px; }
 .print.revealed .hint, .print.revealing .hint { opacity: 0; }
+.print video { display: block; width: 100%; height: auto; max-width: 100%; background: var(--ink); }
 .print figcaption { font-family: var(--hand); font-size: 1.08rem; line-height: 1.35; margin-top: 10px; }
 
 .print.empty { background: transparent; box-shadow: none; padding: 0; }
@@ -503,40 +563,63 @@ dialog#lightbox::backdrop { background: rgba(38, 43, 64, .8); }
   </defs>
 </svg>
 
-<!-- Passport cover: the opening moment -->
-<div class="gate" id="gate" role="dialog" aria-modal="true" aria-label="Mum's passport">
-  <div class="passport" id="passport">
-    <div class="pp-page" id="ppPage" inert>
-      <p class="eyebrow">Passport · Around the World</p>
-      <div class="pp-id">
-        <img class="pp-photo" src="photos/italy/lake-como-ferry.jpg" width="1050" height="1400" alt="Mum on the ferry across Lake Como">
-        <div class="pp-fields">
-          <div><span>Name</span><b>Mum</b></div>
-          <div><span>Date of birth</span><b>09 NOV</b></div>
-          <div><span>Home</span><b>Egypt</b></div>
-          <div><span>Valid until</span><b>Forever</b></div>
-        </div>
+<!-- Departure gate: the opening moment -->
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-label="Departure gate for flight MUM55">
+  <div class="gate-grid">
+    <div class="lounge">
+      <div class="board" role="table" aria-label="Departures">
+        <div class="board-head"><span>Departures</span><span>Gate 9 · <b id="boardClock">--:--</b></span></div>
+        <div class="board-cols" aria-hidden="true"><span style="--w:6"><i>When</i></span><span style="--w:9"><i>Destination</i></span><span style="--w:8"><i>Status</i></span></div>
+        <div id="boardRows"></div>
       </div>
-      <p class="pp-sign">Four stops, two sons, one bear in sunglasses. Happy 55th birthday.</p>
-      <p class="mrz" aria-hidden="true">P&lt;EGYMUM&lt;&lt;HAPPY&lt;55TH&lt;BIRTHDAY&lt;&lt;&lt;&lt;&lt;&lt;<br>AHMED&lt;OMAR&lt;HAMDY&lt;&lt;0911&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p>
-      <button class="btn" type="button" id="startJourney">Start the journey</button>
+      <div class="pa" id="pa">
+        <div class="pa-head">
+          <span class="eyebrow">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 9h3l5-4v14l-5-4H4z" fill="var(--gamboge)"/><path class="wave" d="M15.5 9a4 4 0 0 1 0 6"/><path class="wave w2" d="M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>
+            Boarding announcement
+          </span>
+          <button class="btn small" type="button" id="paPlay">Play with sound</button>
+        </div>
+        <p class="pa-text" id="paText" aria-hidden="true"></p>
+        <p class="sr-only" id="paFull"></p>
+      </div>
     </div>
-    <button class="pp-cover" type="button" id="ppCover" aria-label="Open the passport">
-      <canvas class="wash" id="coverWash" aria-hidden="true"></canvas>
-      <span class="pp-cover-inner">
-        <span class="t1">Around the World</span>
-        <svg viewBox="0 0 92 92" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="46" cy="46" r="34"/><ellipse cx="46" cy="46" rx="14" ry="34"/><path d="M12 46h68M17 29h58M17 63h58"/>
-          <path d="M60 12l14 7-14 7 3-7z" fill="currentColor" stroke="none"/>
-        </svg>
-        <span class="t2">Passport</span>
-        <span class="t3">Mum · 55</span>
-        <span class="tap">Tap to open</span>
-      </span>
-    </button>
+    <div class="desk">
+      <div class="passport" id="passport">
+        <div class="pp-page" id="ppPage" inert>
+          <p class="eyebrow">Passport · Around the World</p>
+          <div class="pp-id">
+            <img class="pp-photo" src="photos/italy/lake-como-ferry.jpg" width="1050" height="1400" alt="Mum on the ferry across Lake Como">
+            <div class="pp-fields">
+              <div><span>Name</span><b>Mum</b></div>
+              <div><span>Date of birth</span><b>09 NOV</b></div>
+              <div><span>Home</span><b>Egypt</b></div>
+              <div><span>Valid until</span><b>Forever</b></div>
+            </div>
+          </div>
+          <p class="pp-sign">Four stops, two sons, one bear in sunglasses. Happy 55th birthday.</p>
+          <p class="mrz" aria-hidden="true">P&lt;EGYMUM&lt;&lt;HAPPY&lt;55TH&lt;BIRTHDAY&lt;&lt;&lt;&lt;&lt;&lt;<br>AHMED&lt;OMAR&lt;HAMDY&lt;&lt;0911&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p>
+          <button class="btn" type="button" id="startJourney">Board flight MUM55</button>
+        </div>
+        <button class="pp-cover" type="button" id="ppCover" aria-label="Open the passport">
+          <canvas class="wash" id="coverWash" aria-hidden="true"></canvas>
+          <span class="pp-cover-inner">
+            <span class="t1">Around the World</span>
+            <svg viewBox="0 0 92 92" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="46" cy="46" r="34"/><ellipse cx="46" cy="46" rx="14" ry="34"/><path d="M12 46h68M17 29h58M17 63h58"/>
+              <path d="M60 12l14 7-14 7 3-7z" fill="currentColor" stroke="none"/>
+            </svg>
+            <span class="t2">Passport</span>
+            <span class="t3">Mum · 55</span>
+            <span class="tap">Tap to open</span>
+          </span>
+        </button>
+      </div>
+      <p class="gate-hint" id="gateHint" aria-live="polite">Tap your passport to check in.</p>
+      <button class="skip" type="button" id="skipGate">Skip to the site</button>
+    </div>
   </div>
-  <p class="gate-hint" id="gateHint" aria-live="polite"></p>
-  <button class="skip" type="button" id="skipGate">Skip the cover</button>
+  <svg class="takeoff" id="takeoff" viewBox="0 0 30 26" aria-hidden="true"><path d="M2 13 L28 4 L20 22 L14 15 Z" fill="currentColor"/><path d="M14 15 L28 4" stroke="var(--paper)" stroke-width="1.2"/></svg>
 </div>
 
 <header class="hero">
@@ -638,7 +721,7 @@ dialog#lightbox::backdrop { background: rgba(38, 43, 64, .8); }
         <h2 id="letter-title">Dear Mum,</h2>
         <div class="body">
           <p>You taught us that the world is big and worth seeing, and then you went and showed it to us, one trip at a time.</p>
-          <p>Shanghai, Milan and Lake Como, two winters in Germany, and all the ordinary days back home in Egypt. Every place was better because you were in it, laughing, planning, and taking far too many photos.</p>
+          <p>Shanghai, Milan and Lake Como, two winters in Berlin, and all the ordinary days back home in Egypt. Every place was better because you were in it, laughing, planning, and taking far too many photos.</p>
           <p>You paint with water and colour. We tried to paint with photographs. Here's to 55 years of you, and to every journey still ahead.</p>
           <p class="sign">Happy birthday. With all our love,<br>Ahmed &amp; Omar</p>
         </div>
@@ -738,12 +821,17 @@ const STOPS = [
   },
   {
     id: "germany", name: "Germany", when: "January 2025 & January 2026",
-    stampTop: "Deutschland", stampBottom: "Jan 25 · Jan 26", stampMid: "DE",
+    stampTop: "Berlin", stampBottom: "Jan 25 · Jan 26", stampMid: "BER",
     pigments: ["--paynes", "--cerulean", "--sap"],
     greet: { text: "Alles Gute zum Geburtstag", lang: "de", gloss: "All the best on your birthday", say: "say it: AH-les GOO-teh tsoom ge-BOORTS-tahk" },
-    note: "Two Januaries, two winters, and the same rule both times: cold outside, warm wherever you were.",
+    note: "Two Januaries in Berlin: the old gate etched on the wall at Brandenburger Tor station, the TV tower from up high, an angel made of lights over the street, and plenty of coffee stops to warm up. Cold outside, warm wherever you were.",
     hamdy: { spot: "text", line: "Hallo! Hamdy packed his scarf." },
-    photos: []
+    photos: [
+      { src: "photos/germany/tv-tower-from-above.jpg", w: 1400, h: 1050, caption: "Berlin from up high, with the TV tower showing off behind us." },
+      { src: "photos/germany/brandenburger-tor-station.jpg", w: 1050, h: 1400, caption: "Underground at Brandenburger Tor, with the old gate etched on the wall." },
+      { src: "photos/germany/angel-of-lights.jpg", w: 1400, h: 1050, caption: "An angel made of lights, glowing over the street on a winter night." },
+      { src: "photos/germany/coffee-break.jpg", w: 1400, h: 1050, caption: "A big cup of coffee to warm up between sights." }
+    ]
   },
   {
     id: "egypt", name: "Egypt", when: "All the days in between",
@@ -910,8 +998,15 @@ function build() {
     let prints = "";
     if (s.photos.length) {
       s.photos.forEach((p, k) => {
-        const idx = allPhotos.push({ ...p }) - 1;
         const t = ((k * 37 + i * 11) % 7 - 3) * 0.7;
+        if (p.video) {
+          prints += `<figure class="print video-print" style="--tilt:${t.toFixed(1)}deg;--tape:${(k % 2 ? 4 : -3)}deg;--tape-color:var(${tapes[(k + i) % tapes.length]})">
+            <video src="${esc(p.video)}" ${p.poster ? `poster="${esc(p.poster)}"` : ""} controls playsinline preload="metadata"></video>
+            <figcaption>${esc(p.caption)}</figcaption>
+          </figure>`;
+          return;
+        }
+        const idx = allPhotos.push({ ...p }) - 1;
         prints += `<figure class="print" data-idx="${idx}" style="--tilt:${t.toFixed(1)}deg;--tape:${(k % 2 ? 4 : -3)}deg;--tape-color:var(${tapes[(k + i) % tapes.length]})">
           <button class="media" type="button" aria-label="Paint this sketch into colour: ${esc(p.caption)}">
             <img src="${esc(p.src)}" width="${p.w}" height="${p.h}" alt="${esc(p.caption)}" loading="lazy" decoding="async">
@@ -1288,9 +1383,119 @@ function seedPainting() {
   paint = keep;
 }
 
-/* ---------- passport gate ---------- */
+/* ---------- departure gate ---------- */
 const gate = document.getElementById("gate");
+const FLAPS = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+const BOARD = [
+  ["MAY 24", "SHANGHAI", "LANDED", "May 2024, Shanghai, landed"],
+  ["JAN 25", "MILANO", "LANDED", "January 2025, Milan, landed"],
+  ["JAN 25", "BERLIN", "LANDED", "January 2025, Berlin, landed"],
+  ["JAN 26", "BERLIN", "LANDED", "January 2026, Berlin, landed"],
+  ["ALWAYS", "EGYPT", "HOME", "Always, Egypt, home"],
+  ["09 NOV", "THE WORLD", "BOARDING", "9 November, flight MUM55 to the world, now boarding"]
+];
+function flapTo(cells, text, delay) {
+  const len = cells.children.length;
+  text = text.toUpperCase().padEnd(len).slice(0, len);
+  [...cells.children].forEach((cell, i) => {
+    const target = text[i];
+    if (reduceMotion) { cell.textContent = target; return; }
+    let n = 5 + Math.floor(Math.random() * 7) + i;
+    const tick = () => {
+      if (n-- <= 0) { cell.textContent = target; return; }
+      cell.textContent = FLAPS[Math.floor(Math.random() * FLAPS.length)];
+      setTimeout(tick, 42);
+    };
+    setTimeout(tick, delay);
+  });
+}
+function cellsFor(len) {
+  const c = document.createElement("span");
+  c.className = "cells"; c.setAttribute("aria-hidden", "true");
+  for (let i = 0; i < len; i++) { const f = document.createElement("span"); f.className = "flap"; f.textContent = " "; c.appendChild(f); }
+  return c;
+}
+let statusCells, nowRow;
+(function buildBoard() {
+  const host = document.getElementById("boardRows");
+  BOARD.forEach((r, i) => {
+    const row = document.createElement("div");
+    row.className = "board-row" + (i === BOARD.length - 1 ? " now" : "");
+    row.setAttribute("role", "row"); row.setAttribute("aria-label", r[3]);
+    const cols = [cellsFor(6), cellsFor(9), cellsFor(8)];
+    cols[2].classList.add("status");
+    cols.forEach(c => row.appendChild(c));
+    host.appendChild(row);
+    cols.forEach((c, k) => flapTo(c, r[k], 250 + i * 160));
+    if (i === BOARD.length - 1) { statusCells = cols[2]; nowRow = row; setTimeout(() => row.classList.add("blink"), reduceMotion ? 0 : 2400); }
+  });
+  const clock = () => { const d = new Date(); document.getElementById("boardClock").textContent = String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); };
+  clock(); setInterval(clock, 15000);
+})();
+
+/* the announcement */
+const PA_TEXT = "Ding-dong. Good evening, ladies and gentlemen. This is the final boarding call for passenger Mum, on flight MUM55 to Around the World. Your crew today are Ahmed and Omar, and your co-pilot is Hamdy the bear. Please have your passport ready and proceed to Gate 9. Happy 55th birthday!";
+const paText = document.getElementById("paText");
+document.getElementById("paFull").textContent = PA_TEXT;
+let typeT;
+function typeAnnouncement(speed) {
+  clearTimeout(typeT);
+  if (reduceMotion) { paText.textContent = PA_TEXT; return; }
+  let i = 0;
+  const step = () => {
+    i++;
+    paText.innerHTML = esc(PA_TEXT.slice(0, i)) + '<span class="caret"></span>';
+    if (i < PA_TEXT.length) typeT = setTimeout(step, PA_TEXT[i - 1] === "." ? speed * 9 : speed);
+  };
+  step();
+}
+setTimeout(() => typeAnnouncement(26), 1100);
+
+let audioCtx = null, speaking = false;
+function chime() {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    audioCtx = audioCtx || new AC();
+    const t0 = audioCtx.currentTime + .05;
+    [392.0, 523.25, 659.25].forEach((f, i) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = "sine"; o.frequency.value = f;
+      const t = t0 + i * .45;
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.22, t + .02); g.gain.exponentialRampToValueAtTime(.001, t + 1.5);
+      o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t + 1.6);
+    });
+  } catch (e) {}
+}
+function setPlaying(on) {
+  speaking = on;
+  document.getElementById("pa").classList.toggle("playing", on);
+  document.getElementById("paPlay").textContent = on ? "Stop" : "Play again";
+}
+function stopAnnouncement() { try { window.speechSynthesis && speechSynthesis.cancel(); } catch (e) {} setPlaying(false); }
+document.getElementById("paPlay").addEventListener("click", () => {
+  if (speaking) { stopAnnouncement(); return; }
+  setPlaying(true);
+  chime();
+  typeAnnouncement(48);
+  setTimeout(() => {
+    if (!speaking) return;
+    try {
+      if (!("speechSynthesis" in window)) { setTimeout(() => setPlaying(false), 6000); return; }
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(PA_TEXT.replace("Ding-dong. ", "").replace("MUM55", "Mum fifty-five"));
+      const voices = speechSynthesis.getVoices();
+      const v = voices.find(x => /en-GB/i.test(x.lang)) || voices.find(x => /^en/i.test(x.lang));
+      if (v) u.voice = v;
+      u.rate = .92;
+      u.onend = () => setPlaying(false);
+      u.onerror = () => setPlaying(false);
+      speechSynthesis.speak(u);
+    } catch (e) { setPlaying(false); }
+  }, 1500);
+});
+
 function closeGate() {
+  stopAnnouncement();
   gate.classList.add("gone");
   document.documentElement.classList.remove("locked");
   document.getElementById("hud").hidden = false;
@@ -1300,10 +1505,19 @@ function closeGate() {
 document.getElementById("ppCover").addEventListener("click", () => {
   document.getElementById("passport").classList.add("open");
   document.getElementById("ppPage").inert = false;
-  document.getElementById("gateHint").textContent = "Happy birthday, Mum. Ready to board?";
+  document.getElementById("gateHint").textContent = "Passport checked. Welcome aboard, Mum.";
   setTimeout(() => document.getElementById("startJourney").focus({ preventScroll: true }), reduceMotion ? 0 : 900);
 });
-document.getElementById("startJourney").addEventListener("click", closeGate);
+document.getElementById("startJourney").addEventListener("click", function () {
+  this.disabled = true; this.textContent = "Boarding…";
+  nowRow.classList.remove("blink");
+  flapTo(statusCells, "DEPARTED", 0);
+  nowRow.setAttribute("aria-label", "9 November, flight MUM55 to the world, departed");
+  document.getElementById("gateHint").textContent = "Flight MUM55 has departed. Enjoy the journey!";
+  if (reduceMotion) { setTimeout(closeGate, 600); return; }
+  setTimeout(() => document.getElementById("takeoff").classList.add("go"), 700);
+  setTimeout(closeGate, 2200);
+});
 document.getElementById("skipGate").addEventListener("click", closeGate);
 
 /* globe */
