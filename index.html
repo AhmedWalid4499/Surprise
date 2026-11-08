@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mum's Painted Passport</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Kalam:wght@300;400;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&text=%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&text=%D9%83%D9%84%20%D8%B3%D9%86%D8%A9%20%D9%88%D8%A7%D9%86%D8%AA%D9%8A%20%D8%B7%D9%8A%D8%A8%D8%A9&display=swap">
+<style>
+/* Layout: one long painted travel journal. Boarding pass → itinerary stamps → one spread per stop → home, cake and a page to paint on.
+   Deliberately single-theme: watercolour on cold-press paper, so pigments multiply onto white in every viewer theme. */
+:root {
+  color-scheme: light;
+  /* paper + ink */
+  --paper: #fdfbf7;
+  --paper-shade: #f3eee4;
+  --ink: #2a2f45;          /* Payne's grey ink, never pure black */
+  --ink-soft: #5f6479;
+  --line: #d9d2c4;
+  /* pigments (real watercolour names) */
+  --vermilion: #d8483a;
+  --gamboge: #e9a23b;
+  --cerulean: #3f86c4;
+  --sap: #6f9a4a;
+  --rose: #d4637f;         /* rose madder */
+  --sienna: #c46a3a;       /* burnt sienna */
+  --turquoise: #2a9d96;
+  --ochre: #c9963a;        /* yellow ochre */
+  --paynes: #4a5a70;
+  /* type */
+  --display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --hand: "Kalam", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --zh: "Ma Shan Zheng", "STKaiti", "KaiTi", serif;
+  --ar: "Aref Ruqaa", "Noto Naskh Arabic", "Geeza Pro", serif;
+  /* scale */
+  --step--1: .875rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.35rem;
+  --step-2: clamp(1.6rem, 3vw, 2rem);
+  --step-3: clamp(2.6rem, 8vw, 5.25rem);
+  --step-4: clamp(3.2rem, 11vw, 7.5rem);
+}
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background-color: var(--paper);
+  /* cold-press paper grain */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .40 0 0 0 0 .32 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+.wrap {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+h1, h2, h3 { text-wrap: balance; margin: 0; font-weight: 600; }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--cerulean); outline-offset: 3px; border-radius: 4px; }
+
+.wash {
+  position: absolute;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  z-index: 0;
+  /* feather the canvas so washes fade into the paper instead of stopping at a straight edge */
+  -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
+}
+.hero, .stop, .finale { overflow-x: clip; }
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.hand { font-family: var(--hand); }
+
+/* ---------- HERO ---------- */
+.hero { position: relative; padding-block: 64px 40px; }
+.hero-title { position: relative; isolation: isolate; padding-block: 24px; }
+.hero-title .wash { inset: -12% -6% -8% -6%; width: 112%; height: 120%; }
+.hero h1 {
+  position: relative; z-index: 1;
+  font-size: var(--step-3);
+  line-height: .98;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144;
+  letter-spacing: -.01em;
+}
+.hero h1 .mum {
+  display: block;
+  font-size: var(--step-4);
+  color: var(--ink);
+}
+.hero h1 .num { font-style: normal; font-variation-settings: "SOFT" 100, "WONK" 0, "opsz" 144; }
+.hero .lede {
+  position: relative; z-index: 1;
+  font-family: var(--hand);
+  font-size: var(--step-1);
+  line-height: 1.45;
+  max-width: 34ch;
+  margin-top: 18px;
+  color: var(--ink-soft);
+}
+
+/* boarding pass */
+.pass {
+  position: relative;
+  margin-top: 44px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 15rem);
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: 0 1px 0 var(--line), 0 18px 40px -24px rgba(42, 47, 69, .45);
+  transform: rotate(-.6deg);
+  max-width: 820px;
+}
+.pass-main { padding: 22px 24px; display: grid; gap: 18px; min-width: 0; }
+.pass-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.pass-head strong { font-family: var(--mono); font-weight: 500; letter-spacing: .12em; text-transform: uppercase; font-size: var(--step--1); }
+.route { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.route .code { font-family: var(--display); font-weight: 700; font-size: clamp(2rem, 6vw, 3rem); line-height: 1; letter-spacing: .02em; }
+.route .code small { display: block; font-family: var(--mono); font-weight: 400; font-size: .7rem; letter-spacing: .12em; color: var(--ink-soft); text-transform: uppercase; margin-top: 6px; }
+.route svg { width: 56px; height: 24px; flex: none; color: var(--rose); }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); gap: 12px 18px; }
+.field span { display: block; font-family: var(--mono); font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+.field b { font-family: var(--mono); font-weight: 500; font-size: 1rem; font-variant-numeric: tabular-nums; }
+.pass-stub {
+  position: relative;
+  padding: 22px 20px;
+  border-left: 2px dashed var(--ink);
+  display: grid; align-content: space-between; gap: 14px;
+  min-width: 0;
+}
+.pass-stub::before, .pass-stub::after {
+  content: ""; position: absolute; left: -13px; width: 24px; height: 24px; border-radius: 50%;
+  background: var(--paper); border: 1.5px solid var(--ink);
+}
+.pass-stub::before { top: -13px; clip-path: inset(50% 0 0 0); }
+.pass-stub::after { bottom: -13px; clip-path: inset(0 0 50% 0); }
+.countdown { font-family: var(--hand); font-size: var(--step-1); line-height: 1.25; }
+.barcode { height: 46px; background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 4px, var(--ink) 4px 5px, transparent 5px 8px, var(--ink) 8px 11px, transparent 11px 13px); opacity: .85; border-radius: 2px; }
+
+/* ---------- ITINERARY ---------- */
+.itinerary { padding-block: 56px 24px; }
+.itinerary h2 { font-size: var(--step-2); font-style: italic; font-variation-settings: "SOFT" 100, "opsz" 72; margin-top: 6px; }
+.stops-list {
+  position: relative;
+  list-style: none; margin: 28px 0 0; padding: 0;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;
+}
+.stops-list::before {
+  content: ""; position: absolute; left: 12%; right: 12%; top: 66px;
+  border-top: 2px dashed var(--line);
+}
+.stops-list a {
+  position: relative;
+  display: grid; justify-items: center; gap: 6px; text-align: center;
+  text-decoration: none; padding: 6px;
+}
+.stops-list .stamp { width: 132px; height: 132px; background: var(--paper); border-radius: 50%; transition: transform .35s cubic-bezier(.3, 1.6, .5, 1); }
+.stops-list a:hover .stamp, .stops-list a:focus-visible .stamp { transform: rotate(0deg) scale(1.06) !important; }
+.stops-list .name { font-family: var(--display); font-weight: 600; font-size: var(--step-1); }
+.stops-list .when { font-family: var(--mono); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+
+.stamp text { font-family: var(--mono); font-weight: 500; letter-spacing: .18em; text-transform: uppercase; }
+
+/* ---------- STOPS ---------- */
+.stop { position: relative; padding-block: 40px 24px; }
+.stop-head { position: relative; isolation: isolate; padding-block: 36px 20px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: center; }
+.stop-head .wash { inset: -18% -8% -10% -10%; width: 118%; height: 128%; }
+.stop-head > div, .stop-head > .stamp { position: relative; z-index: 1; }
+.stop-head h2 {
+  font-size: var(--step-3);
+  line-height: .95;
+  font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144;
+  font-style: italic;
+}
+.stop-head .stamp { width: 150px; height: 150px; }
+.greet { margin-top: 10px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.greet .native { font-size: var(--step-2); line-height: 1.2; }
+.greet .native:lang(zh) { font-family: var(--zh); font-size: clamp(2rem, 4vw, 2.6rem); }
+.greet .native:lang(ar) { font-family: var(--ar); font-size: clamp(1.8rem, 4vw, 2.4rem); }
+.greet .native:lang(it), .greet .native:lang(de) { font-family: var(--display); font-style: italic; }
+.greet .gloss { font-family: var(--hand); color: var(--ink-soft); font-size: var(--step-0); }
+.note {
+  font-family: var(--hand);
+  font-size: var(--step-1);
+  line-height: 1.5;
+  max-width: 46ch;
+  margin-top: 12px;
+}
+
+.prints {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-flow: dense;
+  gap: 40px 28px;
+  align-items: start;
+}
+.print {
+  position: relative;
+  margin: 0;
+  padding: 12px 12px 14px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(42, 47, 69, .12), 0 14px 30px -18px rgba(42, 47, 69, .45);
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform .4s cubic-bezier(.3, 1.4, .5, 1), box-shadow .4s;
+}
+.print.wide { grid-column: span 2; }
+@media (max-width: 900px) { .prints { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .prints { grid-template-columns: minmax(0, 1fr); } .print.wide { grid-column: auto; } }
+.print::before { /* washi tape */
+  content: ""; position: absolute; top: -12px; left: 50%; width: 92px; height: 26px;
+  transform: translateX(-50%) rotate(var(--tape, -3deg));
+  background: var(--tape-color, var(--gamboge));
+  opacity: .62;
+  mix-blend-mode: multiply;
+  clip-path: polygon(0 8%, 4% 0, 8% 10%, 12% 0, 100% 4%, 96% 14%, 100% 26%, 97% 40%, 100% 55%, 96% 70%, 100% 86%, 95% 100%, 0 96%, 4% 82%, 0 68%, 3% 52%, 0 38%, 4% 22%);
+}
+.print button {
+  display: block; width: 100%; padding: 0; border: 0; background: var(--paper-shade); cursor: zoom-in;
+}
+.print img { display: block; width: 100%; height: auto; max-width: 100%; }
+.print figcaption {
+  font-family: var(--hand);
+  font-size: 1.08rem;
+  line-height: 1.35;
+  margin-top: 10px;
+  color: var(--ink);
+}
+.print:hover { transform: rotate(0deg) translateY(-4px); box-shadow: 0 2px 3px rgba(42, 47, 69, .12), 0 24px 40px -20px rgba(42, 47, 69, .5); }
+
+.print.empty { background: transparent; box-shadow: none; padding: 0; }
+.print.empty::before { display: none; }
+.print.empty .frame {
+  aspect-ratio: 3 / 4; max-width: 100%;
+  border: 2px dashed var(--line); border-radius: 6px;
+  display: grid; place-items: center; text-align: center; padding: 16px;
+  font-family: var(--hand); color: var(--ink-soft); font-size: 1.1rem;
+}
+
+/* flight legs between stops */
+.leg { display: grid; justify-items: center; gap: 4px; padding-block: 24px; text-align: center; }
+.leg svg { width: min(420px, 100%); height: 90px; overflow: visible; }
+.leg .path { fill: none; stroke: var(--ink-soft); stroke-width: 2; stroke-dasharray: 2 9; stroke-linecap: round; }
+.leg .plane { fill: var(--leg-color, var(--rose)); }
+.leg p { font-family: var(--hand); font-size: var(--step-1); }
+.leg .eyebrow { font-size: .75rem; }
+
+/* ---------- FINALE ---------- */
+.finale { position: relative; padding-block: 56px 32px; }
+.finale-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 40px; align-items: center; }
+.cake-wrap { position: relative; isolation: isolate; display: grid; justify-items: center; gap: 16px; }
+.cake-wrap .wash { inset: -10%; width: 120%; height: 120%; }
+.cake-wrap svg { position: relative; z-index: 1; width: min(360px, 100%); height: auto; }
+.flame { transform-box: fill-box; transform-origin: 50% 100%; animation: flicker 1.6s ease-in-out infinite alternate; transition: opacity .4s, transform .4s; }
+.flame.b { animation-delay: -.7s; }
+@keyframes flicker { 0% { transform: scale(1, 1) rotate(-2deg); } 50% { transform: scale(.94, 1.08) rotate(2deg); } 100% { transform: scale(1.04, .95) rotate(-1deg); } }
+.out .flame { opacity: 0; transform: scale(.2); animation: none; }
+.smoke { opacity: 0; fill: none; stroke: var(--ink-soft); stroke-width: 2; stroke-linecap: round; }
+.out .smoke { animation: smoke 2.2s ease-out forwards; }
+@keyframes smoke { 0% { opacity: .7; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-40px); } }
+
+.btn {
+  font-family: var(--hand); font-size: 1.2rem; font-weight: 700;
+  padding: 10px 22px; border-radius: 999px;
+  border: 2px solid var(--ink); background: var(--paper); color: var(--ink);
+  cursor: pointer; box-shadow: 3px 3px 0 var(--ink);
+  transition: transform .15s, box-shadow .15s;
+}
+.btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+.btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+.btn.small { font-size: 1rem; padding: 6px 14px; box-shadow: 2px 2px 0 var(--ink); }
+.wish-msg { font-family: var(--hand); font-size: var(--step-1); min-height: 1.5em; text-align: center; }
+
+.letter h2 { font-size: var(--step-3); font-style: italic; line-height: 1; font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144; }
+.letter .body { font-family: var(--hand); font-size: var(--step-1); line-height: 1.6; display: grid; gap: 14px; margin-top: 20px; max-width: 40ch; }
+.letter .sign { margin-top: 8px; font-weight: 700; }
+
+/* sketchbook */
+.sketch { padding-block: 48px 24px; }
+.sketch h2 { font-size: var(--step-2); font-style: italic; font-variation-settings: "SOFT" 100, "opsz" 72; margin-top: 6px; }
+.sketch .intro { font-family: var(--hand); font-size: var(--step-1); color: var(--ink-soft); margin-top: 8px; max-width: 52ch; }
+.easel { margin-top: 22px; display: grid; gap: 14px; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.swatch {
+  width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; padding: 0;
+  background: var(--c); box-shadow: inset 0 0 0 3px var(--paper);
+}
+.swatch[aria-pressed="true"] { border-color: var(--ink); }
+.pigment-name { font-family: var(--mono); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); min-width: 10ch; }
+.sizes { display: flex; gap: 8px; }
+.size-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+#paintCanvas {
+  display: block; width: 100%; max-width: 100%; aspect-ratio: 16 / 9;
+  background: #fff; border-radius: 4px; touch-action: none; cursor: crosshair;
+  box-shadow: 0 1px 2px rgba(42, 47, 69, .12), 0 18px 34px -22px rgba(42, 47, 69, .5);
+}
+
+footer { padding-block: 40px 56px; text-align: center; font-family: var(--hand); color: var(--ink-soft); font-size: var(--step-1); }
+
+/* lightbox */
+dialog#lightbox {
+  border: 0; padding: 0; background: transparent; max-width: min(1000px, 94vw); max-height: 94vh; overflow: visible;
+}
+dialog#lightbox::backdrop { background: rgba(42, 47, 69, .78); }
+.lb-card { background: #fff; padding: 12px 12px 16px; display: grid; gap: 10px; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .6); }
+.lb-card img { max-height: 76vh; width: auto; max-width: 100%; margin-inline: auto; display: block; }
+.lb-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.lb-bar p { font-family: var(--hand); font-size: 1.15rem; min-width: 0; }
+.lb-nav { display: flex; gap: 8px; flex: none; }
+
+/* responsive */
+@media (max-width: 760px) {
+  .pass { grid-template-columns: minmax(0, 1fr); transform: none; }
+  .pass-stub { border-left: 0; border-top: 2px dashed var(--ink); }
+  .pass-stub::before, .pass-stub::after { display: none; }
+  .stops-list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 24px; }
+  .stops-list::before { display: none; }
+  .stop-head { grid-template-columns: minmax(0, 1fr); }
+  .stop-head .stamp { width: 112px; height: 112px; justify-self: end; margin-top: -8px; }
+  .finale-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flame { animation: none; }
+  .print, .btn, .stops-list .stamp { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="ink-rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3"/>
+    </filter>
+    <filter id="stamp-wear">
+      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.3 1.55" result="mask"/>
+      <feComposite in="SourceGraphic" in2="mask" operator="in"/>
+    </filter>
+  </defs>
+</svg>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Flight MUM55 · Boarding pass</p>
+    <div class="hero-title">
+      <canvas class="wash" id="heroWash" aria-hidden="true"></canvas>
+      <h1>Happy <span class="num">55</span>th Birthday, <span class="mum">Mum</span></h1>
+      <p class="lede">A trip around the world in watercolour, through the places we've been lucky enough to see with you.</p>
+    </div>
+
+    <div class="pass" role="group" aria-label="Boarding pass">
+      <div class="pass-main">
+        <div class="pass-head">
+          <strong>Around the World Airways</strong>
+          <span class="eyebrow">First class, always</span>
+        </div>
+        <div class="route">
+          <div class="code">HOME<small>Where it starts</small></div>
+          <svg viewBox="0 0 56 24" aria-hidden="true"><path d="M2 12h40" stroke="currentColor" stroke-width="2" stroke-dasharray="2 5" stroke-linecap="round" fill="none"/><path d="M38 4l16 8-16 8 4-8z" fill="currentColor"/></svg>
+          <div class="code">WORLD<small>Wherever you go next</small></div>
+        </div>
+        <div class="fields">
+          <div class="field"><span>Passenger</span><b>Mum</b></div>
+          <div class="field"><span>Date</span><b>09 NOV</b></div>
+          <div class="field"><span>Seat</span><b>55A</b></div>
+          <div class="field"><span>Stops</span><b>4</b></div>
+        </div>
+      </div>
+      <div class="pass-stub">
+        <div>
+          <span class="eyebrow">Boarding</span>
+          <p class="countdown" id="countdown" aria-live="polite">9 November</p>
+        </div>
+        <div class="barcode" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="itinerary" aria-labelledby="itin-title">
+    <div class="wrap">
+      <p class="eyebrow">Itinerary</p>
+      <h2 id="itin-title">Four stops, painted in order</h2>
+      <ol class="stops-list" id="stopsList"></ol>
+    </div>
+  </section>
+
+  <div id="stops"></div>
+
+  <section class="finale" id="birthday" aria-labelledby="letter-title">
+    <div class="wrap finale-grid">
+      <div class="cake-wrap" id="cakeWrap">
+        <canvas class="wash" id="cakeWash" aria-hidden="true"></canvas>
+        <svg viewBox="0 0 320 300" role="img" aria-label="A birthday cake with two candles shaped like the number 55">
+          <defs>
+            <pattern id="stripeA" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+              <rect width="14" height="14" fill="#f6c8d3"/><rect width="6" height="14" fill="#d4637f"/>
+            </pattern>
+            <pattern id="stripeB" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+              <rect width="14" height="14" fill="#cfe2f3"/><rect width="6" height="14" fill="#3f86c4"/>
+            </pattern>
+            <radialGradient id="flameGrad" cx="50%" cy="70%" r="60%">
+              <stop offset="0" stop-color="#fff6c8"/><stop offset=".55" stop-color="#e9a23b"/><stop offset="1" stop-color="#d8483a" stop-opacity=".2"/>
+            </radialGradient>
+          </defs>
+          <g filter="url(#ink-rough)">
+            <ellipse cx="160" cy="268" rx="140" ry="18" fill="#e7e2d6" stroke="#2a2f45" stroke-width="2"/>
+            <rect x="52" y="178" width="216" height="86" rx="10" fill="#f3d9b5" stroke="#2a2f45" stroke-width="2"/>
+            <path d="M52 196c14 0 14 18 28 18s14-14 28-14 14 22 28 22 14-16 28-16 14 20 28 20 14-18 28-18 14 12 28 12 14-14 18-14v-14c0-6-4-10-10-10H62c-6 0-10 4-10 10z" fill="#d4637f" fill-opacity=".85" stroke="#2a2f45" stroke-width="2"/>
+            <g fill="#e9a23b"><circle cx="90" cy="240" r="4"/><circle cx="140" cy="232" r="4"/><circle cx="196" cy="244" r="4"/><circle cx="240" cy="230" r="4"/></g>
+            <g fill="#2a9d96"><circle cx="112" cy="250" r="3.5"/><circle cx="170" cy="252" r="3.5"/><circle cx="222" cy="252" r="3.5"/></g>
+            <text x="98" y="176" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="104" fill="url(#stripeA)" stroke="#2a2f45" stroke-width="2.5" text-anchor="middle">5</text>
+            <text x="222" y="176" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="104" fill="url(#stripeB)" stroke="#2a2f45" stroke-width="2.5" text-anchor="middle">5</text>
+            <path d="M100 100v-10M222 100v-10" stroke="#2a2f45" stroke-width="2.5" stroke-linecap="round"/>
+          </g>
+          <path class="flame a" d="M100 92c-9-8-9-20 0-34 9 14 9 26 0 34z" fill="url(#flameGrad)" stroke="#d8483a" stroke-width="1"/>
+          <path class="flame b" d="M222 92c-9-8-9-20 0-34 9 14 9 26 0 34z" fill="url(#flameGrad)" stroke="#d8483a" stroke-width="1"/>
+          <path class="smoke" d="M100 88c-6-8 6-14 0-22s6-14 0-20"/>
+          <path class="smoke" d="M222 88c-6-8 6-14 0-22s6-14 0-20"/>
+        </svg>
+        <button class="btn" id="blowBtn" type="button">Make a wish and blow</button>
+        <p class="wish-msg" id="wishMsg" aria-live="polite"></p>
+      </div>
+
+      <article class="letter">
+        <p class="eyebrow">Last stop · Home</p>
+        <h2 id="letter-title">Dear Mum,</h2>
+        <div class="body">
+          <p>You taught us that the world is big and worth seeing, and then you went and showed it to us, one trip at a time.</p>
+          <p>Shanghai, Italy, two winters in Germany, and all the ordinary days back home in Egypt. Every place was better because you were in it, laughing, planning, and taking far too many photos.</p>
+          <p>You paint with water and colour. We tried to paint with photographs. Here's to 55 years of you, and to every journey still ahead.</p>
+          <p class="sign">Happy birthday. With all my love,<br>Ahmed</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sketch" aria-labelledby="sketch-title">
+    <div class="wrap">
+      <p class="eyebrow">Your page</p>
+      <h2 id="sketch-title">Now it's your turn to paint</h2>
+      <p class="intro">A fresh sheet of cold-press, six pigments and two brushes. Paint over the same spot to deepen the colour, the way real washes build up.</p>
+      <div class="easel">
+        <div class="toolbar">
+          <div class="swatches" id="swatches" role="group" aria-label="Pigments"></div>
+          <span class="pigment-name" id="pigmentName" aria-live="polite"></span>
+          <div class="sizes" role="group" aria-label="Brush size">
+            <button class="btn small size-btn" type="button" data-size="9" aria-pressed="false" id="brushFine">Fine brush</button>
+            <button class="btn small size-btn" type="button" data-size="26" aria-pressed="true" id="brushWash">Wash brush</button>
+          </div>
+          <button class="btn small" type="button" id="clearPaint">Fresh sheet</button>
+        </div>
+        <canvas id="paintCanvas" aria-label="Painting area: drag to paint with watercolour"></canvas>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Painted with love for 9 November 2026</div>
+</footer>
+
+<dialog id="lightbox" aria-label="Photo">
+  <div class="lb-card">
+    <img id="lbImg" alt="">
+    <div class="lb-bar">
+      <p id="lbCap"></p>
+      <div class="lb-nav">
+        <button class="btn small" type="button" id="lbPrev" aria-label="Previous photo">&larr;</button>
+        <button class="btn small" type="button" id="lbNext" aria-label="Next photo">&rarr;</button>
+        <button class="btn small" type="button" id="lbClose">Close</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* =========================================================
+   TRIP DATA: add photos to each stop's `photos` list.
+   wide: true  → landscape photo that spans two columns.
+   ========================================================= */
+const STOPS = [
+  {
+    id: "china", name: "China", city: "Shanghai", when: "May 2024",
+    stampTop: "Shanghai", stampBottom: "May 2024", stampMid: "PVG",
+    pigments: ["--vermilion", "--gamboge", "--rose"],
+    greet: { text: "生日快乐", lang: "zh", gloss: "shēngrì kuàilè · happy birthday" },
+    note: "Bead stalls under walls of carved characters, a castle at the end of the path, a garden ruled by the Queen of Hearts, and you on stage in Shanghai. May 2024 filled a whole sketchbook on its own.",
+    photos: [
+      { src: "photos/china/shanghai-conference.jpg", w: 1050, h: 1400, caption: "Shanghai 2024: a certificate of appreciation, and one very proud family." },
+      { src: "photos/china/disneyland-selfie.jpg", w: 1400, h: 1050, wide: true, caption: "Shanghai Disneyland, with the castle peeking over our shoulders." },
+      { src: "photos/china/queen-of-hearts-garden.jpg", w: 1050, h: 1400, caption: "In the Queen of Hearts' garden. \"Embrace the calm within.\"" },
+      { src: "photos/china/bead-market.jpg", w: 1050, h: 1400, caption: "Bead hunting at the market, with a very cool little bear." },
+      { src: "photos/china/birthday-breakfast.jpg", w: 1050, h: 1400, caption: "Candles at breakfast, polka dots to match." }
+    ]
+  },
+  {
+    id: "italy", name: "Italy", city: "Italia", when: "January 2025",
+    stampTop: "Italia", stampBottom: "Jan 2025", stampMid: "IT",
+    pigments: ["--sienna", "--sap", "--cerulean"],
+    greet: { text: "Buon compleanno", lang: "it", gloss: "happy birthday" },
+    note: "Winter light on old stone, espresso standing at the bar, and you stopping every few steps because the view needed looking at properly.",
+    photos: []
+  },
+  {
+    id: "germany", name: "Germany", city: "Deutschland", when: "January 2025 & January 2026",
+    stampTop: "Deutschland", stampBottom: "Jan 25 · Jan 26", stampMid: "DE",
+    pigments: ["--paynes", "--cerulean", "--sap"],
+    greet: { text: "Alles Gute zum Geburtstag", lang: "de", gloss: "all the best on your birthday" },
+    note: "Two Januaries, two winters, and the same rule both times: cold outside, warm wherever you were.",
+    photos: []
+  },
+  {
+    id: "egypt", name: "Egypt", city: "Home", when: "All the days in between",
+    stampTop: "Misr · Home", stampBottom: "Always", stampMid: "EG",
+    pigments: ["--turquoise", "--ochre", "--cerulean"],
+    greet: { text: "كل سنة وانتي طيبة", lang: "ar", gloss: "kol sana w enti tayba · many happy returns" },
+    note: "The trips are wonderful, but this is where every journey starts and ends. Sunny afternoons, family tables, and you at the centre of all of it.",
+    photos: []
+  }
+];
+
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- seeded randomness ---------- */
+function rng(seed) {
+  return function () {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function gauss(r) { let u = 0, v = 0; while (!u) u = r(); while (!v) v = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+
+/* ---------- watercolour: layered, recursively deformed polygons ---------- */
+function deform(pts, depth, variance, r) {
+  if (!depth) return pts;
+  const out = [];
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[i], b = pts[(i + 1) % pts.length];
+    const len = Math.hypot(b.x - a.x, b.y - a.y);
+    out.push(a, { x: (a.x + b.x) / 2 + gauss(r) * len * variance, y: (a.y + b.y) / 2 + gauss(r) * len * variance });
+  }
+  return deform(out, depth - 1, variance, r);
+}
+function basePoly(cx, cy, rad, r, n = 10, sx = 1, sy = 1) {
+  const pts = [];
+  for (let i = 0; i < n; i++) {
+    const a = i / n * Math.PI * 2;
+    const rr = rad * (0.75 + r() * 0.5);
+    pts.push({ x: cx + Math.cos(a) * rr * sx, y: cy + Math.sin(a) * rr * sy });
+  }
+  return deform(pts, 2, 0.28, r);
+}
+function fillPoly(ctx, pts) {
+  ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+  ctx.closePath(); ctx.fill();
+}
+
+/* paint a set of blobs onto a canvas, blooming in over a few frames */
+function paintWash(canvas, blobs, seed, opts = {}) {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (!w || !h) return;
+  canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  const r = rng(seed);
+  const layers = opts.layers || 30;
+  const jobs = blobs.map(b => {
+    const rad = b.r * Math.min(w, h * 1.6);
+    return { color: b.c, base: basePoly(b.x * w, b.y * h, rad, r, 10, b.sx || 1.6, b.sy || 1), alpha: b.a || 0.045 };
+  });
+  let layer = 0;
+  const step = () => {
+    const per = reduceMotion || opts.instant ? layers : 3;
+    for (let k = 0; k < per && layer < layers; k++, layer++) {
+      for (const j of jobs) {
+        ctx.globalAlpha = j.alpha; ctx.fillStyle = j.color;
+        fillPoly(ctx, deform(j.base, 3, 0.42, r));
+      }
+    }
+    if (layer < layers) requestAnimationFrame(step);
+    else granulate(ctx, jobs, r, w, h);
+  };
+  step();
+}
+/* pigment granulation: tiny specks settling into the paper */
+function granulate(ctx, jobs, r, w, h) {
+  for (const j of jobs) {
+    ctx.fillStyle = j.color; ctx.globalAlpha = 0.18;
+    const xs = j.base.map(p => p.x), ys = j.base.map(p => p.y);
+    const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+    for (let i = 0; i < 140; i++) {
+      const x = x0 + r() * (x1 - x0), y = y0 + r() * (y1 - y0);
+      if (x < 0 || y < 0 || x > w || y > h) continue;
+      ctx.beginPath(); ctx.arc(x, y, r() * 1.4 + .3, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+
+/* ---------- passport stamps ---------- */
+let stampCount = 0;
+function stampSVG(stop, color, tilt) {
+  const id = "arc" + (stampCount++);
+  return `<svg class="stamp" viewBox="0 0 160 160" style="transform:rotate(${tilt}deg)" aria-hidden="true">
+    <g filter="url(#stamp-wear)" fill="none" stroke="${color}" color="${color}">
+      <circle cx="80" cy="80" r="74" stroke-width="3.5"/>
+      <circle cx="80" cy="80" r="50" stroke-width="2"/>
+      <path id="${id}t" d="M22 80a58 58 0 0 1 116 0" />
+      <path id="${id}b" d="M18 80a62 62 0 0 0 124 0" />
+      <text font-size="13" fill="currentColor" stroke="none"><textPath href="#${id}t" startOffset="50%" text-anchor="middle">${stop.stampTop}</textPath></text>
+      <text font-size="11" fill="currentColor" stroke="none"><textPath href="#${id}b" startOffset="50%" text-anchor="middle">${stop.stampBottom}</textPath></text>
+      <text x="80" y="92" font-size="30" font-weight="500" fill="currentColor" stroke="none" text-anchor="middle" style="letter-spacing:.06em">${stop.stampMid}</text>
+      <path d="M60 104h40" stroke-width="1.5"/>
+    </g>
+  </svg>`;
+}
+
+/* ---------- build itinerary + stops ---------- */
+const allPhotos = [];
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+function build() {
+  const list = document.getElementById("stopsList");
+  const host = document.getElementById("stops");
+  const tilts = [-8, 6, -4, 9];
+  const tapes = ["--gamboge", "--rose", "--cerulean", "--sap", "--turquoise"];
+
+  STOPS.forEach((s, i) => {
+    const ink = css(s.pigments[0]);
+    list.insertAdjacentHTML("beforeend",
+      `<li><a href="#${s.id}">${stampSVG(s, ink, tilts[i % tilts.length])}<span class="name">${esc(s.name)}</span><span class="when">${esc(s.when)}</span></a></li>`);
+
+    let prints = "";
+    if (s.photos.length) {
+      s.photos.forEach((p, k) => {
+        const idx = allPhotos.push({ ...p, stop: s.name }) - 1;
+        const tilt = ((k * 37 + i * 11) % 7 - 3) * 0.7;
+        prints += `<figure class="print${p.wide ? " wide" : ""}" style="--tilt:${tilt.toFixed(1)}deg;--tape:${(k % 2 ? 4 : -3)}deg;--tape-color:var(${tapes[(k + i) % tapes.length]})">
+          <button type="button" data-idx="${idx}" aria-label="Open photo: ${esc(p.caption)}">
+            <img src="${esc(p.src)}" width="${p.w}" height="${p.h}" alt="${esc(p.caption)}" loading="lazy" decoding="async">
+          </button>
+          <figcaption>${esc(p.caption)}</figcaption>
+        </figure>`;
+      });
+    } else {
+      for (let k = 0; k < 3; k++) {
+        prints += `<figure class="print empty"><div class="frame">${k === 1 ? "Still drying…<br>photos from " + esc(s.name) + " coming soon" : ""}</div></figure>`;
+      }
+    }
+
+    const g = s.greet;
+    host.insertAdjacentHTML("beforeend", `
+      <section class="stop" id="${s.id}" aria-labelledby="${s.id}-title">
+        <div class="wrap">
+          <div class="stop-head">
+            <canvas class="wash" data-stop="${i}" aria-hidden="true"></canvas>
+            <div>
+              <p class="eyebrow">Stop ${i + 1} of ${STOPS.length} · ${esc(s.when)}</p>
+              <h2 id="${s.id}-title">${esc(s.name)}</h2>
+              <p class="greet"><span class="native" lang="${g.lang}"${g.lang === "ar" ? ' dir="rtl"' : ""}>${esc(g.text)}</span><span class="gloss">${esc(g.gloss)}</span></p>
+              <p class="note">${esc(s.note)}</p>
+            </div>
+            ${stampSVG(s, ink, tilts[(i + 1) % tilts.length])}
+          </div>
+          <div class="prints">${prints}</div>
+        </div>
+      </section>`);
+
+    const next = STOPS[i + 1];
+    const legText = next ? `Next stop: ${esc(next.name)}` : "And finally, home for cake";
+    const legColor = next ? next.pigments[0] : "--rose";
+    const flip = i % 2 ? -1 : 1;
+    host.insertAdjacentHTML("beforeend", `
+      <div class="leg wrap" style="--leg-color:var(${legColor})">
+        <svg viewBox="0 0 420 90" aria-hidden="true">
+          <path class="path" d="M20 70 C 120 ${45 - flip * 35}, 300 ${45 + flip * 35}, 390 24"/>
+          <g transform="translate(390 24) rotate(-28)"><path class="plane" d="M-14 -8 L14 0 L-14 8 L-8 0 Z"/></g>
+        </svg>
+        <span class="eyebrow">${esc(s.name)} → ${next ? esc(next.name) : "Home"}</span>
+        <p>${legText}</p>
+      </div>`);
+  });
+
+  if (!allPhotos.length) return;
+  host.addEventListener("click", e => {
+    const b = e.target.closest("button[data-idx]");
+    if (b) openLightbox(+b.dataset.idx);
+  });
+}
+
+/* ---------- washes ---------- */
+function stopBlobs(s) {
+  const [a, b, c] = s.pigments.map(css);
+  return [
+    { x: .2, y: .5, r: .32, c: a, a: .05 },
+    { x: .5, y: .38, r: .26, c: b, a: .04 },
+    { x: .82, y: .58, r: .24, c: c, a: .035 }
+  ];
+}
+function heroBlobs() {
+  return [
+    { x: .18, y: .45, r: .3, c: css("--rose"), a: .05 },
+    { x: .5, y: .62, r: .26, c: css("--gamboge"), a: .045 },
+    { x: .8, y: .4, r: .28, c: css("--cerulean"), a: .04 },
+    { x: .62, y: .2, r: .14, c: css("--turquoise"), a: .035 }
+  ];
+}
+function cakeBlobs() {
+  return [
+    { x: .35, y: .55, r: .34, c: css("--rose"), a: .04, sx: 1, sy: 1 },
+    { x: .65, y: .45, r: .3, c: css("--gamboge"), a: .04, sx: 1, sy: 1 }
+  ];
+}
+
+function paintAll(first) {
+  paintWash(document.getElementById("heroWash"), heroBlobs(), 55, { instant: !first });
+  paintWash(document.getElementById("cakeWash"), cakeBlobs(), 911, { instant: true });
+  document.querySelectorAll(".stop-head .wash").forEach(cv => {
+    const i = +cv.dataset.stop;
+    const run = () => paintWash(cv, stopBlobs(STOPS[i]), 100 + i * 17, { instant: !first });
+    if (first && "IntersectionObserver" in window && !reduceMotion) {
+      const io = new IntersectionObserver(es => { if (es[0].isIntersecting) { io.disconnect(); run(); } }, { rootMargin: "120px" });
+      io.observe(cv);
+    } else run();
+  });
+}
+
+/* ---------- countdown ---------- */
+function countdown() {
+  const el = document.getElementById("countdown");
+  const now = new Date();
+  const y = now.getFullYear();
+  const start = new Date(y, 10, 9), end = new Date(y, 10, 10);
+  if (now >= start && now < end) { el.textContent = "Now boarding. It's your day!"; return; }
+  let target = now < start ? start : new Date(y + 1, 10, 9);
+  const ms = target - now;
+  const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60;
+  el.textContent = d > 0 ? `${d} day${d > 1 ? "s" : ""}, ${h}h until take-off` : `${h}h ${m}m until take-off`;
+}
+
+/* ---------- lightbox ---------- */
+const lb = document.getElementById("lightbox");
+let lbIdx = 0;
+function showLb(i) {
+  lbIdx = (i + allPhotos.length) % allPhotos.length;
+  const p = allPhotos[lbIdx];
+  const img = document.getElementById("lbImg");
+  img.src = p.src; img.alt = p.caption;
+  document.getElementById("lbCap").textContent = p.caption;
+}
+function openLightbox(i) { showLb(i); if (lb.showModal) lb.showModal(); else lb.setAttribute("open", ""); }
+document.getElementById("lbPrev").onclick = () => showLb(lbIdx - 1);
+document.getElementById("lbNext").onclick = () => showLb(lbIdx + 1);
+document.getElementById("lbClose").onclick = () => lb.close();
+lb.addEventListener("click", e => { if (e.target === lb) lb.close(); });
+lb.addEventListener("keydown", e => {
+  if (e.key === "ArrowLeft") showLb(lbIdx - 1);
+  if (e.key === "ArrowRight") showLb(lbIdx + 1);
+});
+
+/* ---------- candles ---------- */
+document.getElementById("blowBtn").addEventListener("click", function () {
+  const wrap = document.getElementById("cakeWrap");
+  const msg = document.getElementById("wishMsg");
+  if (wrap.classList.contains("out")) {
+    wrap.classList.remove("out");
+    this.textContent = "Make a wish and blow";
+    msg.textContent = "";
+    return;
+  }
+  wrap.classList.add("out");
+  this.textContent = "Light them again";
+  msg.textContent = "Wish made. Happy 55th birthday, Mum!";
+  // confetti of watercolour drops
+  const cv = document.getElementById("cakeWash");
+  const ctx = cv.getContext("2d");
+  const w = cv.clientWidth, h = cv.clientHeight;
+  const r = rng(Date.now() & 0xffff);
+  const pig = ["--rose", "--gamboge", "--cerulean", "--turquoise", "--vermilion", "--sap"].map(css);
+  let n = 0;
+  const drop = () => {
+    for (let k = 0; k < 3 && n < 26; k++, n++) {
+      const x = r() * w, y = r() * h, rad = 6 + r() * 18, c = pig[n % pig.length];
+      const base = basePoly(x, y, rad, r, 8, 1, 1);
+      ctx.fillStyle = c;
+      for (let l = 0; l < 10; l++) { ctx.globalAlpha = .07; fillPoly(ctx, deform(base, 2, .4, r)); }
+    }
+    ctx.globalAlpha = 1;
+    if (n < 26) setTimeout(drop, reduceMotion ? 0 : 60);
+  };
+  drop();
+});
+
+/* ---------- sketchbook ---------- */
+const PAINTS = [
+  ["Rose madder", "--rose"], ["Gamboge", "--gamboge"], ["Cerulean", "--cerulean"],
+  ["Sap green", "--sap"], ["Burnt sienna", "--sienna"], ["Payne's grey", "--paynes"]
+];
+const pc = document.getElementById("paintCanvas");
+const pctx = pc.getContext("2d");
+const prng = rng(2024);
+let paint = { color: css("--cerulean"), name: "Cerulean", size: 26 };
+
+function sizePaintCanvas() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const w = pc.clientWidth, h = pc.clientHeight;
+  if (!w) return;
+  let snap = null;
+  if (pc.width) { snap = document.createElement("canvas"); snap.width = pc.width; snap.height = pc.height; snap.getContext("2d").drawImage(pc, 0, 0); }
+  pc.width = Math.round(w * dpr); pc.height = Math.round(h * dpr);
+  pctx.setTransform(1, 0, 0, 1, 0, 0);
+  pctx.fillStyle = "#fff"; pctx.fillRect(0, 0, pc.width, pc.height);
+  if (snap) pctx.drawImage(snap, 0, 0, pc.width, pc.height);
+  pctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+function dab(x, y) {
+  const base = basePoly(x, y, paint.size * (0.7 + prng() * 0.4), prng, 7, 1, 1);
+  pctx.fillStyle = paint.color;
+  pctx.globalAlpha = paint.size > 15 ? 0.035 : 0.09;
+  for (let l = 0; l < 3; l++) fillPoly(pctx, deform(base, 2, .35, prng));
+  pctx.globalAlpha = 1;
+}
+let last = null;
+pc.addEventListener("pointerdown", e => { pc.setPointerCapture(e.pointerId); const p = pt(e); last = p; dab(p.x, p.y); });
+pc.addEventListener("pointermove", e => {
+  if (!last) return;
+  const p = pt(e);
+  const dist = Math.hypot(p.x - last.x, p.y - last.y);
+  const stepLen = Math.max(2, paint.size * 0.3);
+  if (dist < stepLen) return;
+  for (let t = stepLen; t <= dist; t += stepLen) dab(last.x + (p.x - last.x) * t / dist, last.y + (p.y - last.y) * t / dist);
+  last = p;
+});
+["pointerup", "pointercancel", "pointerleave"].forEach(ev => pc.addEventListener(ev, () => { last = null; }));
+function pt(e) { const b = pc.getBoundingClientRect(); return { x: e.clientX - b.left, y: e.clientY - b.top }; }
+
+const sw = document.getElementById("swatches");
+PAINTS.forEach(([name, token], i) => {
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "swatch"; b.id = "swatch-" + i;
+  b.style.setProperty("--c", `var(${token})`);
+  b.setAttribute("aria-label", name);
+  b.setAttribute("aria-pressed", name === paint.name ? "true" : "false");
+  b.onclick = () => {
+    paint.color = css(token); paint.name = name;
+    sw.querySelectorAll(".swatch").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+    document.getElementById("pigmentName").textContent = name;
+  };
+  sw.appendChild(b);
+});
+document.getElementById("pigmentName").textContent = paint.name;
+document.querySelectorAll(".size-btn").forEach(b => b.addEventListener("click", () => {
+  paint.size = +b.dataset.size;
+  document.querySelectorAll(".size-btn").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+}));
+document.getElementById("clearPaint").onclick = () => {
+  pctx.save(); pctx.setTransform(1, 0, 0, 1, 0, 0); pctx.fillStyle = "#fff"; pctx.fillRect(0, 0, pc.width, pc.height); pctx.restore();
+  seedPainting();
+};
+/* a small starter painting so the page opens with colour on it */
+function seedPainting() {
+  const w = pc.clientWidth, h = pc.clientHeight, keep = { ...paint };
+  const strokes = [["--cerulean", 26, .08, .32, .92, .28], ["--gamboge", 26, .72, .18, .82, .18], ["--sap", 26, .06, .82, .94, .78], ["--rose", 9, .4, .6, .6, .6]];
+  for (const [tok, size, x0, y0, x1, y1] of strokes) {
+    paint.color = css(tok); paint.size = size;
+    const steps = 40;
+    for (let s = 0; s <= steps; s++) {
+      const t = s / steps;
+      dab((x0 + (x1 - x0) * t) * w, (y0 + (y1 - y0) * t + Math.sin(t * 6) * 0.03) * h);
+    }
+  }
+  paint = keep;
+}
+
+/* ---------- boot ---------- */
+build();
+countdown(); setInterval(countdown, 30000);
+sizePaintCanvas(); seedPainting();
+paintAll(true);
+let lastW = window.innerWidth, rt;
+window.addEventListener("resize", () => {
+  clearTimeout(rt);
+  rt = setTimeout(() => {
+    if (Math.abs(window.innerWidth - lastW) < 40) return;
+    lastW = window.innerWidth; paintAll(false); sizePaintCanvas();
+  }, 200);
+});
+</script>
+</body>
+</html>
