@@ -8,57 +8,62 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Kalam:wght@300;400;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&text=%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&text=%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90%E4%BD%A0%E5%A5%BD&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&text=%D9%83%D9%84%20%D8%B3%D9%86%D8%A9%20%D9%88%D8%A7%D9%86%D8%AA%D9%8A%20%D8%B7%D9%8A%D8%A8%D8%A9&display=swap">
 <style>
-/* Layout: one long painted travel journal. Boarding pass → itinerary stamps → one spread per stop → home, cake and a page to paint on.
-   Deliberately single-theme: watercolour on cold-press paper, so pigments multiply onto white in every viewer theme. */
+/* Layout: a painted travel journal she plays through. Passport cover → boarding pass + painted globe →
+   itinerary of stamps → one spread per stop (text on clean paper, paint kept in its own panel) → home, cake, letter, a sheet to paint on.
+   Rule of the page: words never sit on top of paint.
+   Deliberately single-theme: watercolour on cold-press paper looks the same in every viewer theme. */
 :root {
   color-scheme: light;
-  /* paper + ink */
   --paper: #fdfbf7;
-  --paper-shade: #f3eee4;
-  --ink: #2a2f45;          /* Payne's grey ink, never pure black */
-  --ink-soft: #5f6479;
-  --line: #d9d2c4;
-  /* pigments (real watercolour names) */
+  --paper-shade: #f1ece2;
+  --ink: #262b40;          /* Payne's grey ink */
+  --ink-soft: #4f5468;
+  --line: #d6cfc1;
   --vermilion: #d8483a;
   --gamboge: #e9a23b;
   --cerulean: #3f86c4;
   --sap: #6f9a4a;
-  --rose: #d4637f;         /* rose madder */
-  --sienna: #c46a3a;       /* burnt sienna */
+  --rose: #d4637f;
+  --sienna: #c46a3a;
   --turquoise: #2a9d96;
-  --ochre: #c9963a;        /* yellow ochre */
+  --ochre: #c9963a;
   --paynes: #4a5a70;
-  /* type */
+  --cover: #23365a;        /* passport cover */
+  --cover-deep: #182640;
+  --foil: #efd38c;         /* gold foil */
+  --fur: #dcc7a3;          /* Hamdy */
+  --fur-dark: #b89c74;
+  --lens: #1b2030;
   --display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   --hand: "Kalam", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
   --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --zh: "Ma Shan Zheng", "STKaiti", "KaiTi", serif;
   --ar: "Aref Ruqaa", "Noto Naskh Arabic", "Geeza Pro", serif;
-  /* scale */
   --step--1: .875rem;
   --step-0: 1.0625rem;
-  --step-1: 1.35rem;
+  --step-1: 1.3rem;
   --step-2: clamp(1.6rem, 3vw, 2rem);
-  --step-3: clamp(2.6rem, 8vw, 5.25rem);
-  --step-4: clamp(3.2rem, 11vw, 7.5rem);
+  --step-3: clamp(2.6rem, 8vw, 5rem);
+  --step-4: clamp(3.4rem, 12vw, 7.5rem);
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .40 0 0 0 0 .32 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
 }
 
+*, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+html.locked { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
   margin: 0;
   background-color: var(--paper);
-  /* cold-press paper grain */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .40 0 0 0 0 .32 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  background-image: var(--grain);
   color: var(--ink);
   font-family: var(--display);
   font-size: var(--step-0);
   line-height: 1.6;
-  overflow-x: hidden;
 }
 
 .wrap {
@@ -71,18 +76,8 @@ body {
 h1, h2, h3 { text-wrap: balance; margin: 0; font-weight: 600; }
 p { margin: 0; }
 a { color: inherit; }
+button { font: inherit; color: inherit; }
 :focus-visible { outline: 3px solid var(--cerulean); outline-offset: 3px; border-radius: 4px; }
-
-.wash {
-  position: absolute;
-  pointer-events: none;
-  mix-blend-mode: multiply;
-  z-index: 0;
-  /* feather the canvas so washes fade into the paper instead of stopping at a straight edge */
-  -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
-  mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
-}
-.hero, .stop, .finale { overflow-x: clip; }
 
 .eyebrow {
   font-family: var(--mono);
@@ -92,48 +87,115 @@ a { color: inherit; }
   color: var(--ink-soft);
 }
 
-.hand { font-family: var(--hand); }
+.wash { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+.btn {
+  font-family: var(--hand); font-size: 1.15rem; font-weight: 700; line-height: 1.2;
+  padding: 10px 22px; border-radius: 999px;
+  border: 2px solid var(--ink); background: var(--paper); color: var(--ink);
+  cursor: pointer; box-shadow: 3px 3px 0 var(--ink);
+  transition: transform .15s, box-shadow .15s, background .2s;
+}
+.btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+.btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+.btn.small { font-size: 1rem; padding: 6px 14px; box-shadow: 2px 2px 0 var(--ink); }
+.btn[disabled] { cursor: default; background: var(--paper-shade); box-shadow: none; transform: none; }
+
+/* ---------- PASSPORT GATE ---------- */
+.gate {
+  position: fixed; inset: 0; z-index: 60;
+  display: grid; place-items: center; gap: 18px; align-content: center;
+  background-color: var(--paper); background-image: var(--grain);
+  padding: max(20px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(20px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  transition: opacity .8s ease, visibility .8s;
+}
+.gate.gone { opacity: 0; visibility: hidden; }
+.gate-hint { font-family: var(--hand); font-size: var(--step-1); color: var(--ink-soft); text-align: center; min-height: 1.6em; }
+.passport { position: relative; width: min(330px, 80vw); aspect-ratio: 5 / 7; perspective: 1800px; }
+.pp-page, .pp-cover { position: absolute; inset: 0; border-radius: 6px 16px 16px 6px; }
+.pp-page {
+  background-color: #fff; background-image: var(--grain);
+  border: 1px solid var(--line);
+  box-shadow: 0 30px 60px -30px rgba(38, 43, 64, .6);
+  padding: 22px 20px 16px;
+  display: grid; grid-template-rows: auto auto 1fr auto auto; gap: 12px;
+  overflow: hidden;
+}
+.pp-page .eyebrow { font-size: .68rem; }
+.pp-id { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 14px; align-items: start; }
+.pp-photo { width: 96px; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border: 1px solid var(--line); filter: saturate(.9); max-width: 100%; }
+.pp-fields { display: grid; gap: 6px; min-width: 0; }
+.pp-fields span { display: block; font-family: var(--mono); font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.pp-fields b { font-family: var(--mono); font-weight: 500; font-size: .85rem; }
+.pp-sign { font-family: var(--hand); font-size: 1.05rem; line-height: 1.35; align-self: center; }
+.mrz { font-family: var(--mono); font-size: .62rem; letter-spacing: .08em; line-height: 1.4; color: var(--ink-soft); word-break: break-all; }
+.pp-page .btn { justify-self: center; }
+.pp-cover {
+  border: 0; padding: 0; cursor: pointer;
+  background: var(--cover); color: var(--foil);
+  transform-origin: left center; transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: transform 1.3s cubic-bezier(.6, .05, .25, 1);
+  box-shadow: inset 8px 0 14px -6px var(--cover-deep), 0 30px 60px -28px rgba(24, 38, 64, .8);
+  overflow: hidden;
+  display: grid; place-items: center; text-align: center;
+}
+.pp-cover .wash { opacity: .9; }
+.pp-cover-inner { position: relative; z-index: 1; display: grid; justify-items: center; gap: 14px; padding: 24px; }
+.pp-cover .t1 { font-family: var(--mono); letter-spacing: .32em; font-size: .78rem; text-transform: uppercase; }
+.pp-cover .t2 { font-family: var(--display); font-weight: 600; font-size: 2.1rem; letter-spacing: .14em; text-transform: uppercase; line-height: 1.1; }
+.pp-cover .t3 { font-family: var(--display); font-style: italic; font-size: 1.15rem; }
+.pp-cover svg { width: 92px; height: 92px; }
+.pp-cover .tap { font-family: var(--hand); font-size: 1.05rem; opacity: .9; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .45; } }
+.passport.open .pp-cover { transform: rotateY(-168deg); pointer-events: none; }
+.skip { background: none; border: 0; font-family: var(--mono); font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); text-decoration: underline; cursor: pointer; }
 
 /* ---------- HERO ---------- */
-.hero { position: relative; padding-block: 64px 40px; }
-.hero-title { position: relative; isolation: isolate; padding-block: 24px; }
-.hero-title .wash { inset: -12% -6% -8% -6%; width: 112%; height: 120%; }
+.hero { padding-block: 48px 32px; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 32px; align-items: center; }
 .hero h1 {
-  position: relative; z-index: 1;
   font-size: var(--step-3);
-  line-height: .98;
+  line-height: 1;
   font-style: italic;
   font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144;
   letter-spacing: -.01em;
-}
-.hero h1 .mum {
-  display: block;
-  font-size: var(--step-4);
-  color: var(--ink);
+  margin-top: 10px;
 }
 .hero h1 .num { font-style: normal; font-variation-settings: "SOFT" 100, "WONK" 0, "opsz" 144; }
-.hero .lede {
-  position: relative; z-index: 1;
-  font-family: var(--hand);
-  font-size: var(--step-1);
-  line-height: 1.45;
-  max-width: 34ch;
-  margin-top: 18px;
-  color: var(--ink-soft);
+.hero h1 .mum {
+  display: inline-block;
+  font-size: var(--step-4);
+  line-height: 1.05;
+  padding-inline: .06em;
+  background: linear-gradient(176deg, transparent 58%, color-mix(in srgb, var(--rose) 38%, transparent) 58% 86%, transparent 86%);
 }
+.hero .lede { font-family: var(--hand); font-size: var(--step-1); line-height: 1.5; max-width: 34ch; margin-top: 16px; color: var(--ink); }
+
+.globe-wrap { position: relative; width: min(340px, 78vw); aspect-ratio: 1; max-width: 100%; justify-self: center; }
+.globe {
+  position: absolute; inset: 9%; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: transparent;
+  -webkit-mask-image: radial-gradient(circle closest-side, #000 86%, transparent 100%);
+  mask-image: radial-gradient(circle closest-side, #000 86%, transparent 100%);
+}
+.globe canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.orbit { position: absolute; inset: 0; border-radius: 50%; border: 1.5px dashed var(--line); animation: spin 22s linear infinite; pointer-events: none; }
+.orbit svg { position: absolute; top: -13px; left: 50%; width: 30px; height: 26px; margin-left: -15px; color: var(--rose); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.globe-cap { position: absolute; left: 0; right: 0; bottom: -30px; text-align: center; font-family: var(--hand); color: var(--ink-soft); font-size: 1rem; }
 
 /* boarding pass */
 .pass {
   position: relative;
-  margin-top: 44px;
+  margin-top: 56px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 15rem);
   background: var(--paper);
   border: 1.5px solid var(--ink);
   border-radius: 14px;
-  box-shadow: 0 1px 0 var(--line), 0 18px 40px -24px rgba(42, 47, 69, .45);
-  transform: rotate(-.6deg);
-  max-width: 820px;
+  box-shadow: 0 1px 0 var(--line), 0 18px 40px -24px rgba(38, 43, 64, .45);
+  transform: rotate(-.5deg);
+  max-width: 860px;
 }
 .pass-main { padding: 22px 24px; display: grid; gap: 18px; min-width: 0; }
 .pass-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
@@ -145,17 +207,8 @@ a { color: inherit; }
 .fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); gap: 12px 18px; }
 .field span { display: block; font-family: var(--mono); font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
 .field b { font-family: var(--mono); font-weight: 500; font-size: 1rem; font-variant-numeric: tabular-nums; }
-.pass-stub {
-  position: relative;
-  padding: 22px 20px;
-  border-left: 2px dashed var(--ink);
-  display: grid; align-content: space-between; gap: 14px;
-  min-width: 0;
-}
-.pass-stub::before, .pass-stub::after {
-  content: ""; position: absolute; left: -13px; width: 24px; height: 24px; border-radius: 50%;
-  background: var(--paper); border: 1.5px solid var(--ink);
-}
+.pass-stub { position: relative; padding: 22px 20px; border-left: 2px dashed var(--ink); display: grid; align-content: space-between; gap: 14px; min-width: 0; }
+.pass-stub::before, .pass-stub::after { content: ""; position: absolute; left: -13px; width: 24px; height: 24px; border-radius: 50%; background: var(--paper); border: 1.5px solid var(--ink); }
 .pass-stub::before { top: -13px; clip-path: inset(50% 0 0 0); }
 .pass-stub::after { bottom: -13px; clip-path: inset(0 0 50% 0); }
 .countdown { font-family: var(--hand); font-size: var(--step-1); line-height: 1.25; }
@@ -164,106 +217,155 @@ a { color: inherit; }
 /* ---------- ITINERARY ---------- */
 .itinerary { padding-block: 56px 24px; }
 .itinerary h2 { font-size: var(--step-2); font-style: italic; font-variation-settings: "SOFT" 100, "opsz" 72; margin-top: 6px; }
-.stops-list {
-  position: relative;
-  list-style: none; margin: 28px 0 0; padding: 0;
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;
-}
-.stops-list::before {
-  content: ""; position: absolute; left: 12%; right: 12%; top: 66px;
-  border-top: 2px dashed var(--line);
-}
-.stops-list a {
-  position: relative;
-  display: grid; justify-items: center; gap: 6px; text-align: center;
-  text-decoration: none; padding: 6px;
-}
-.stops-list .stamp { width: 132px; height: 132px; background: var(--paper); border-radius: 50%; transition: transform .35s cubic-bezier(.3, 1.6, .5, 1); }
-.stops-list a:hover .stamp, .stops-list a:focus-visible .stamp { transform: rotate(0deg) scale(1.06) !important; }
+.itinerary .how { font-family: var(--hand); font-size: var(--step-1); margin-top: 8px; max-width: 54ch; }
+.stops-list { position: relative; list-style: none; margin: 28px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.stops-list::before { content: ""; position: absolute; left: 12%; right: 12%; top: 72px; border-top: 2px dashed var(--line); }
+.stops-list a { position: relative; display: grid; justify-items: center; gap: 4px; text-align: center; text-decoration: none; padding: 6px; }
+.stops-list .stamp { width: 132px; height: 132px; background: var(--paper); border-radius: 50%; transition: transform .35s cubic-bezier(.3, 1.6, .5, 1), opacity .4s, filter .4s; }
+.stops-list li:not(.got) .stamp { opacity: .3; filter: grayscale(1); }
+.stops-list a:hover .stamp, .stops-list a:focus-visible .stamp { transform: rotate(0deg) scale(1.06); }
 .stops-list .name { font-family: var(--display); font-weight: 600; font-size: var(--step-1); }
-.stops-list .when { font-family: var(--mono); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+.stops-list .when { font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+.stops-list .status { font-family: var(--hand); font-size: .95rem; color: var(--ink-soft); }
+.stops-list li.got .status { color: var(--ink); font-weight: 700; }
 
+.stamp { transform: rotate(var(--rot, 0deg)); }
 .stamp text { font-family: var(--mono); font-weight: 500; letter-spacing: .18em; text-transform: uppercase; }
 
 /* ---------- STOPS ---------- */
-.stop { position: relative; padding-block: 40px 24px; }
-.stop-head { position: relative; isolation: isolate; padding-block: 36px 20px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: center; }
-.stop-head .wash { inset: -18% -8% -10% -10%; width: 118%; height: 128%; }
-.stop-head > div, .stop-head > .stamp { position: relative; z-index: 1; }
+.stop { position: relative; padding-block: 40px 16px; }
+.stop-head { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 32px; align-items: center; }
+.stop-text { min-width: 0; position: relative; }
 .stop-head h2 {
   font-size: var(--step-3);
   line-height: .95;
-  font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144;
   font-style: italic;
+  font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144;
+  margin-top: 6px;
 }
-.stop-head .stamp { width: 150px; height: 150px; }
-.greet { margin-top: 10px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
-.greet .native { font-size: var(--step-2); line-height: 1.2; }
-.greet .native:lang(zh) { font-family: var(--zh); font-size: clamp(2rem, 4vw, 2.6rem); }
-.greet .native:lang(ar) { font-family: var(--ar); font-size: clamp(1.8rem, 4vw, 2.4rem); }
-.greet .native:lang(it), .greet .native:lang(de) { font-family: var(--display); font-style: italic; }
-.greet .gloss { font-family: var(--hand); color: var(--ink-soft); font-size: var(--step-0); }
-.note {
-  font-family: var(--hand);
-  font-size: var(--step-1);
-  line-height: 1.5;
-  max-width: 46ch;
-  margin-top: 12px;
+.stop-head h2::after { /* a single painted stroke under the country name */
+  content: ""; display: block; width: 3.2em; max-width: 100%; height: .16em; margin-top: .12em; border-radius: 40% 60% 55% 45%;
+  background: var(--pig, var(--rose)); opacity: .55; transform: rotate(-1.5deg);
+}
+.note { font-family: var(--hand); font-size: var(--step-1); line-height: 1.5; max-width: 46ch; margin-top: 18px; }
+
+/* luggage tag holding the greeting: always on solid paper */
+.tag {
+  position: relative; display: inline-grid; gap: 2px; margin-top: 18px; margin-left: 14px;
+  padding: 10px 18px 10px 30px;
+  background: #fff; border: 1.5px solid var(--ink); border-radius: 4px 12px 12px 4px;
+  box-shadow: 2px 3px 0 var(--line);
+  transform: rotate(-1.5deg); transform-origin: -14px 50%;
+  cursor: pointer; text-align: left;
+}
+.tag::before { content: ""; position: absolute; left: 10px; top: 50%; width: 9px; height: 9px; margin-top: -5px; border-radius: 50%; border: 1.5px solid var(--ink); background: var(--paper); }
+.tag::after { content: ""; position: absolute; left: -16px; top: 50%; width: 22px; border-top: 1.5px solid var(--ink-soft); transform: rotate(-12deg); }
+.tag.swing { animation: swing 1.1s ease-out; }
+@keyframes swing { 0% { transform: rotate(-1.5deg); } 20% { transform: rotate(7deg); } 45% { transform: rotate(-6deg); } 70% { transform: rotate(3deg); } 100% { transform: rotate(-1.5deg); } }
+.tag .native { font-size: var(--step-2); line-height: 1.2; color: var(--ink); }
+.tag .native:lang(zh) { font-family: var(--zh); font-size: clamp(2rem, 4vw, 2.5rem); }
+.tag .native:lang(ar) { font-family: var(--ar); font-size: clamp(1.7rem, 4vw, 2.2rem); }
+.tag .native:lang(it), .tag .native:lang(de) { font-family: var(--display); font-style: italic; font-weight: 600; }
+.tag .gloss { font-family: var(--mono); font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
+.tag .say { font-family: var(--hand); font-size: 1rem; color: var(--ink-soft); }
+
+/* the paint panel: the only place colour goes in a stop header */
+.panel-col { display: grid; justify-items: center; gap: 16px; min-width: 0; }
+.panel { position: relative; width: 100%; aspect-ratio: 4 / 3; max-width: 100%; }
+.panel .wash {
+  -webkit-mask-image: radial-gradient(closest-side, #000 60%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 60%, transparent 100%);
+}
+.slot { position: absolute; left: 50%; top: 50%; width: 156px; height: 156px; margin: -78px 0 0 -78px; }
+.slot .empty-ring {
+  position: absolute; inset: 0; border-radius: 50%; border: 2px dashed var(--ink-soft); background: var(--paper);
+  display: grid; place-items: center; text-align: center; font-family: var(--hand); font-size: 1.05rem; color: var(--ink-soft); line-height: 1.25; padding: 20px;
+}
+.slot .stamp { position: absolute; inset: 0; width: 100%; height: 100%; background: var(--paper); border-radius: 50%; opacity: 0; }
+.slot.stamped .empty-ring { opacity: 0; }
+.slot.stamped .stamp { animation: thump .55s cubic-bezier(.2, 1.5, .4, 1) forwards; }
+.slot.stamped.instant .stamp { animation: none; opacity: 1; }
+@keyframes thump {
+  0% { opacity: 0; transform: scale(2.1) rotate(var(--rot)); }
+  55% { opacity: 1; transform: scale(.92) rotate(var(--rot)); }
+  100% { opacity: 1; transform: scale(1) rotate(var(--rot)); }
 }
 
-.prints {
-  margin-top: 36px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-auto-flow: dense;
-  gap: 40px 28px;
-  align-items: start;
-}
+/* photos: pencil sketches she paints into colour */
+.prints-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px 16px; margin-top: 36px; }
+.prints-bar p { font-family: var(--hand); font-size: var(--step-1); }
+.prints-wrap { position: relative; }
+.prints { columns: 3 250px; column-gap: 28px; padding-top: 22px; margin-top: 8px; }
 .print {
-  position: relative;
-  margin: 0;
-  padding: 12px 12px 14px;
+  position: relative; display: inline-block; width: 100%;
+  margin: 0 0 40px; padding: 12px 12px 14px;
   background: #fff;
-  box-shadow: 0 1px 2px rgba(42, 47, 69, .12), 0 14px 30px -18px rgba(42, 47, 69, .45);
+  box-shadow: 0 1px 2px rgba(38, 43, 64, .12), 0 14px 30px -18px rgba(38, 43, 64, .45);
   transform: rotate(var(--tilt, 0deg));
   transition: transform .4s cubic-bezier(.3, 1.4, .5, 1), box-shadow .4s;
+  break-inside: avoid;
 }
-.print.wide { grid-column: span 2; }
-@media (max-width: 900px) { .prints { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 560px) { .prints { grid-template-columns: minmax(0, 1fr); } .print.wide { grid-column: auto; } }
-.print::before { /* washi tape */
-  content: ""; position: absolute; top: -12px; left: 50%; width: 92px; height: 26px;
+.print::before {
+  content: ""; position: absolute; top: -12px; left: 50%; width: 92px; height: 26px; z-index: 2;
   transform: translateX(-50%) rotate(var(--tape, -3deg));
-  background: var(--tape-color, var(--gamboge));
-  opacity: .62;
-  mix-blend-mode: multiply;
+  background: var(--tape-color, var(--gamboge)); opacity: .62; mix-blend-mode: multiply;
   clip-path: polygon(0 8%, 4% 0, 8% 10%, 12% 0, 100% 4%, 96% 14%, 100% 26%, 97% 40%, 100% 55%, 96% 70%, 100% 86%, 95% 100%, 0 96%, 4% 82%, 0 68%, 3% 52%, 0 38%, 4% 22%);
 }
-.print button {
-  display: block; width: 100%; padding: 0; border: 0; background: var(--paper-shade); cursor: zoom-in;
+.print:hover { transform: rotate(0deg) translateY(-4px); }
+.media { position: relative; display: block; width: 100%; padding: 0; border: 0; background: var(--paper-shade); cursor: pointer; }
+.media img { display: block; width: 100%; height: auto; max-width: 100%; transition: filter 1.2s ease; }
+.print:not(.revealed) .media img { filter: grayscale(1) contrast(.75) brightness(1.18) sepia(.12); }
+.media canvas.sketch { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity .7s ease; }
+.print.revealed canvas.sketch { opacity: 0; pointer-events: none; }
+.media .hint {
+  position: absolute; left: 10px; bottom: 10px; z-index: 1;
+  font-family: var(--hand); font-size: .95rem; line-height: 1.2;
+  background: var(--paper); border: 1.5px solid var(--ink); border-radius: 999px; padding: 4px 12px 4px 10px;
+  display: inline-flex; align-items: center; gap: 6px; transition: opacity .4s;
 }
-.print img { display: block; width: 100%; height: auto; max-width: 100%; }
-.print figcaption {
-  font-family: var(--hand);
-  font-size: 1.08rem;
-  line-height: 1.35;
-  margin-top: 10px;
-  color: var(--ink);
-}
-.print:hover { transform: rotate(0deg) translateY(-4px); box-shadow: 0 2px 3px rgba(42, 47, 69, .12), 0 24px 40px -20px rgba(42, 47, 69, .5); }
+.media .hint svg { width: 16px; height: 16px; }
+.print.revealed .hint, .print.revealing .hint { opacity: 0; }
+.print figcaption { font-family: var(--hand); font-size: 1.08rem; line-height: 1.35; margin-top: 10px; }
 
 .print.empty { background: transparent; box-shadow: none; padding: 0; }
 .print.empty::before { display: none; }
 .print.empty .frame {
-  aspect-ratio: 3 / 4; max-width: 100%;
-  border: 2px dashed var(--line); border-radius: 6px;
+  aspect-ratio: 3 / 4; max-width: 100%; border: 2px dashed var(--line); border-radius: 6px;
   display: grid; place-items: center; text-align: center; padding: 16px;
   font-family: var(--hand); color: var(--ink-soft); font-size: 1.1rem;
 }
 
-/* flight legs between stops */
-.leg { display: grid; justify-items: center; gap: 4px; padding-block: 24px; text-align: center; }
-.leg svg { width: min(420px, 100%); height: 90px; overflow: visible; }
+/* Hamdy, hiding */
+.spot { position: absolute; z-index: 4; }
+.spot-panel { left: 2%; bottom: 4%; }
+.spot-prints { left: 6px; bottom: 2px; }
+.spot-text { right: 0; bottom: -10px; }
+.spot-leg { left: calc(50% + 150px); top: 2px; }
+.hamdy {
+  display: block; width: 50px; height: 34px; overflow: hidden; padding: 0; border: 0; background: none; cursor: pointer;
+  transform: rotate(var(--hr, -6deg));
+}
+.hamdy svg { display: block; width: 50px; height: 54px; transform: translateY(14px); transition: transform .35s cubic-bezier(.3, 1.6, .5, 1); }
+.hamdy:hover svg, .hamdy:focus-visible svg { transform: translateY(6px); }
+.spot.found .hamdy { height: 54px; overflow: visible; margin-top: -20px; }
+.spot.found .hamdy svg { transform: translateY(0); animation: hop .7s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes hop { 0% { transform: translateY(14px); } 40% { transform: translateY(-16px); } 100% { transform: translateY(0); } }
+.bubble {
+  position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  width: max-content; max-width: 210px;
+  background: #fff; border: 1.5px solid var(--ink); border-radius: 14px; padding: 6px 12px;
+  font-family: var(--hand); font-size: 1rem; line-height: 1.3; text-align: center;
+  box-shadow: 2px 2px 0 var(--line);
+}
+.bubble::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -7px; border: 7px solid transparent; border-top-color: var(--ink); }
+.spot-prints .bubble, .spot-panel .bubble { left: 0; transform: none; }
+.spot-prints .bubble::after, .spot-panel .bubble::after { left: 18px; margin-left: 0; }
+.spot-text .bubble, .spot-leg .bubble { left: auto; right: 0; transform: none; }
+.spot-text .bubble::after, .spot-leg .bubble::after { left: auto; right: 16px; }
+
+/* flight legs */
+.leg { position: relative; display: grid; justify-items: center; gap: 4px; padding-block: 28px; text-align: center; }
+.leg svg.route-line { width: min(420px, 100%); height: 90px; overflow: visible; }
 .leg .path { fill: none; stroke: var(--ink-soft); stroke-width: 2; stroke-dasharray: 2 9; stroke-linecap: round; }
 .leg .plane { fill: var(--leg-color, var(--rose)); }
 .leg p { font-family: var(--hand); font-size: var(--step-1); }
@@ -272,9 +374,13 @@ a { color: inherit; }
 /* ---------- FINALE ---------- */
 .finale { position: relative; padding-block: 56px 32px; }
 .finale-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 40px; align-items: center; }
-.cake-wrap { position: relative; isolation: isolate; display: grid; justify-items: center; gap: 16px; }
-.cake-wrap .wash { inset: -10%; width: 120%; height: 120%; }
-.cake-wrap svg { position: relative; z-index: 1; width: min(360px, 100%); height: auto; }
+.cake-col { display: grid; justify-items: center; gap: 16px; min-width: 0; }
+.cake-wrap { position: relative; width: min(400px, 100%); aspect-ratio: 1; display: grid; place-items: center; }
+.cake-wrap .wash {
+  -webkit-mask-image: radial-gradient(closest-side, #000 60%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 60%, transparent 100%);
+}
+.cake-wrap svg { position: relative; z-index: 1; width: 86%; height: auto; }
 .flame { transform-box: fill-box; transform-origin: 50% 100%; animation: flicker 1.6s ease-in-out infinite alternate; transition: opacity .4s, transform .4s; }
 .flame.b { animation-delay: -.7s; }
 @keyframes flicker { 0% { transform: scale(1, 1) rotate(-2deg); } 50% { transform: scale(.94, 1.08) rotate(2deg); } 100% { transform: scale(1.04, .95) rotate(-1deg); } }
@@ -282,72 +388,84 @@ a { color: inherit; }
 .smoke { opacity: 0; fill: none; stroke: var(--ink-soft); stroke-width: 2; stroke-linecap: round; }
 .out .smoke { animation: smoke 2.2s ease-out forwards; }
 @keyframes smoke { 0% { opacity: .7; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-40px); } }
-
-.btn {
-  font-family: var(--hand); font-size: 1.2rem; font-weight: 700;
-  padding: 10px 22px; border-radius: 999px;
-  border: 2px solid var(--ink); background: var(--paper); color: var(--ink);
-  cursor: pointer; box-shadow: 3px 3px 0 var(--ink);
-  transition: transform .15s, box-shadow .15s;
-}
-.btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
-.btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
-.btn.small { font-size: 1rem; padding: 6px 14px; box-shadow: 2px 2px 0 var(--ink); }
 .wish-msg { font-family: var(--hand); font-size: var(--step-1); min-height: 1.5em; text-align: center; }
 
-.letter h2 { font-size: var(--step-3); font-style: italic; line-height: 1; font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144; }
+.letter h2 { font-size: var(--step-3); font-style: italic; line-height: 1; font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144; margin-top: 6px; }
 .letter .body { font-family: var(--hand); font-size: var(--step-1); line-height: 1.6; display: grid; gap: 14px; margin-top: 20px; max-width: 40ch; }
 .letter .sign { margin-top: 8px; font-weight: 700; }
 
 /* sketchbook */
 .sketch { padding-block: 48px 24px; }
 .sketch h2 { font-size: var(--step-2); font-style: italic; font-variation-settings: "SOFT" 100, "opsz" 72; margin-top: 6px; }
-.sketch .intro { font-family: var(--hand); font-size: var(--step-1); color: var(--ink-soft); margin-top: 8px; max-width: 52ch; }
+.sketch .intro { font-family: var(--hand); font-size: var(--step-1); margin-top: 8px; max-width: 52ch; }
 .easel { margin-top: 22px; display: grid; gap: 14px; }
 .toolbar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
 .swatches { display: flex; flex-wrap: wrap; gap: 8px; }
-.swatch {
-  width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; padding: 0;
-  background: var(--c); box-shadow: inset 0 0 0 3px var(--paper);
-}
+.swatch { width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; padding: 0; background: var(--c); box-shadow: inset 0 0 0 3px var(--paper); }
 .swatch[aria-pressed="true"] { border-color: var(--ink); }
 .pigment-name { font-family: var(--mono); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); min-width: 10ch; }
 .sizes { display: flex; gap: 8px; }
 .size-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
-#paintCanvas {
-  display: block; width: 100%; max-width: 100%; aspect-ratio: 16 / 9;
-  background: #fff; border-radius: 4px; touch-action: none; cursor: crosshair;
-  box-shadow: 0 1px 2px rgba(42, 47, 69, .12), 0 18px 34px -22px rgba(42, 47, 69, .5);
-}
+#paintCanvas { display: block; width: 100%; max-width: 100%; aspect-ratio: 16 / 9; background: #fff; border-radius: 4px; touch-action: none; cursor: crosshair; box-shadow: 0 1px 2px rgba(38, 43, 64, .12), 0 18px 34px -22px rgba(38, 43, 64, .5); }
 
-footer { padding-block: 40px 56px; text-align: center; font-family: var(--hand); color: var(--ink-soft); font-size: var(--step-1); }
+footer { padding-block: 40px 96px; text-align: center; font-family: var(--hand); color: var(--ink-soft); font-size: var(--step-1); }
+
+/* journey progress, pinned to the bottom */
+.hud {
+  position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 40;
+  display: flex; align-items: center; gap: 4px;
+  background: var(--paper); border: 2px solid var(--ink); border-radius: 999px; box-shadow: 3px 3px 0 var(--ink);
+  padding: 4px 6px;
+  max-width: calc(100vw - 32px);
+}
+.hud a { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; text-decoration: none; font-family: var(--hand); font-size: 1rem; white-space: nowrap; }
+.hud a:hover { background: var(--paper-shade); }
+.hud svg { width: 22px; height: 22px; flex: none; }
+.hud b { font-family: var(--mono); font-weight: 500; font-variant-numeric: tabular-nums; }
+.hud .sep { width: 1.5px; height: 22px; background: var(--line); }
+.hud.bump { animation: bump .5s ease; }
+@keyframes bump { 40% { transform: translateX(-50%) scale(1.12); } }
+
+.toast {
+  position: fixed; left: 50%; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); z-index: 45;
+  transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+  width: max-content; max-width: min(420px, calc(100vw - 32px));
+  background: var(--ink); color: var(--paper); border-radius: 14px; padding: 10px 18px;
+  font-family: var(--hand); font-size: 1.1rem; text-align: center; line-height: 1.35;
+  transition: opacity .35s, transform .35s;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
 
 /* lightbox */
-dialog#lightbox {
-  border: 0; padding: 0; background: transparent; max-width: min(1000px, 94vw); max-height: 94vh; overflow: visible;
-}
-dialog#lightbox::backdrop { background: rgba(42, 47, 69, .78); }
+dialog#lightbox { border: 0; padding: 0; background: transparent; max-width: min(1000px, 94vw); max-height: 94vh; overflow: visible; }
+dialog#lightbox::backdrop { background: rgba(38, 43, 64, .8); }
 .lb-card { background: #fff; padding: 12px 12px 16px; display: grid; gap: 10px; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .6); }
-.lb-card img { max-height: 76vh; width: auto; max-width: 100%; margin-inline: auto; display: block; }
-.lb-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.lb-bar p { font-family: var(--hand); font-size: 1.15rem; min-width: 0; }
+.lb-card img { max-height: 74vh; width: auto; max-width: 100%; margin-inline: auto; display: block; }
+.lb-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.lb-bar p { font-family: var(--hand); font-size: 1.15rem; min-width: 0; flex: 1 1 14rem; }
 .lb-nav { display: flex; gap: 8px; flex: none; }
 
 /* responsive */
 @media (max-width: 760px) {
+  .hero-grid { grid-template-columns: minmax(0, 1fr); }
+  .globe-wrap { order: -1; width: min(250px, 70vw); margin-bottom: 20px; }
   .pass { grid-template-columns: minmax(0, 1fr); transform: none; }
   .pass-stub { border-left: 0; border-top: 2px dashed var(--ink); }
   .pass-stub::before, .pass-stub::after { display: none; }
   .stops-list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 24px; }
   .stops-list::before { display: none; }
+  .stops-list .stamp { width: 112px; height: 112px; }
   .stop-head { grid-template-columns: minmax(0, 1fr); }
-  .stop-head .stamp { width: 112px; height: 112px; justify-self: end; margin-top: -8px; }
+  .panel { aspect-ratio: 16 / 10; }
+  .slot { width: 128px; height: 128px; margin: -64px 0 0 -64px; }
   .finale-grid { grid-template-columns: minmax(0, 1fr); }
+  .spot-leg { left: auto; right: 4px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .flame { animation: none; }
-  .print, .btn, .stops-list .stamp { transition: none; }
+  .flame, .orbit, .pp-cover .tap { animation: none; }
+  .print, .btn, .stops-list .stamp, .pp-cover, .hamdy svg { transition: none; }
+  .slot.stamped .stamp, .spot.found .hamdy svg, .tag.swing, .hud.bump { animation: none; opacity: 1; }
 }
 </style>
 </head>
@@ -364,16 +482,76 @@ dialog#lightbox::backdrop { background: rgba(42, 47, 69, .78); }
       <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.3 1.55" result="mask"/>
       <feComposite in="SourceGraphic" in2="mask" operator="in"/>
     </filter>
+    <symbol id="hamdy-art" viewBox="0 0 60 64">
+      <circle cx="13" cy="13" r="9" fill="var(--fur)" stroke="var(--ink)" stroke-width="1.6"/>
+      <circle cx="47" cy="13" r="9" fill="var(--fur)" stroke="var(--ink)" stroke-width="1.6"/>
+      <circle cx="13" cy="13" r="4" fill="var(--fur-dark)"/>
+      <circle cx="47" cy="13" r="4" fill="var(--fur-dark)"/>
+      <ellipse cx="30" cy="52" rx="17" ry="12" fill="var(--fur)" stroke="var(--ink)" stroke-width="1.6"/>
+      <circle cx="30" cy="28" r="19" fill="var(--fur)" stroke="var(--ink)" stroke-width="1.6"/>
+      <rect x="12" y="21" width="16" height="10" rx="3.5" fill="var(--lens)"/>
+      <rect x="32" y="21" width="16" height="10" rx="3.5" fill="var(--lens)"/>
+      <path d="M28 24h4" stroke="var(--lens)" stroke-width="2"/>
+      <path d="M15 23.5l5 0" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".7"/>
+      <ellipse cx="30" cy="36" rx="3.2" ry="2.3" fill="#7a5a3a"/>
+      <path d="M26 40q4 3 8 0" fill="none" stroke="var(--ink)" stroke-width="1.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="brush-icon" viewBox="0 0 24 24">
+      <path d="M20 3l1 1-9 10-2-2z" fill="var(--ink)"/>
+      <path d="M9 13l2 2c0 3-2 5-6 5 1-1 1-2 1-3 0-2 1-4 3-4z" fill="var(--rose)" stroke="var(--ink)" stroke-width="1"/>
+    </symbol>
   </defs>
 </svg>
 
+<!-- Passport cover: the opening moment -->
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-label="Mum's passport">
+  <div class="passport" id="passport">
+    <div class="pp-page" id="ppPage" inert>
+      <p class="eyebrow">Passport · Around the World</p>
+      <div class="pp-id">
+        <img class="pp-photo" src="photos/italy/lake-como-ferry.jpg" width="1050" height="1400" alt="Mum on the ferry across Lake Como">
+        <div class="pp-fields">
+          <div><span>Name</span><b>Mum</b></div>
+          <div><span>Date of birth</span><b>09 NOV</b></div>
+          <div><span>Home</span><b>Egypt</b></div>
+          <div><span>Valid until</span><b>Forever</b></div>
+        </div>
+      </div>
+      <p class="pp-sign">Four stops, two sons, one bear in sunglasses. Happy 55th birthday.</p>
+      <p class="mrz" aria-hidden="true">P&lt;EGYMUM&lt;&lt;HAPPY&lt;55TH&lt;BIRTHDAY&lt;&lt;&lt;&lt;&lt;&lt;<br>AHMED&lt;OMAR&lt;HAMDY&lt;&lt;0911&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</p>
+      <button class="btn" type="button" id="startJourney">Start the journey</button>
+    </div>
+    <button class="pp-cover" type="button" id="ppCover" aria-label="Open the passport">
+      <canvas class="wash" id="coverWash" aria-hidden="true"></canvas>
+      <span class="pp-cover-inner">
+        <span class="t1">Around the World</span>
+        <svg viewBox="0 0 92 92" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="46" cy="46" r="34"/><ellipse cx="46" cy="46" rx="14" ry="34"/><path d="M12 46h68M17 29h58M17 63h58"/>
+          <path d="M60 12l14 7-14 7 3-7z" fill="currentColor" stroke="none"/>
+        </svg>
+        <span class="t2">Passport</span>
+        <span class="t3">Mum · 55</span>
+        <span class="tap">Tap to open</span>
+      </span>
+    </button>
+  </div>
+  <p class="gate-hint" id="gateHint" aria-live="polite"></p>
+  <button class="skip" type="button" id="skipGate">Skip the cover</button>
+</div>
+
 <header class="hero">
   <div class="wrap">
-    <p class="eyebrow">Flight MUM55 · Boarding pass</p>
-    <div class="hero-title">
-      <canvas class="wash" id="heroWash" aria-hidden="true"></canvas>
-      <h1>Happy <span class="num">55</span>th Birthday, <span class="mum">Mum</span></h1>
-      <p class="lede">A trip around the world in watercolour, through the places we've been lucky enough to see with you.</p>
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Flight MUM55 · Boarding pass</p>
+        <h1>Happy <span class="num">55</span>th Birthday, <span class="mum">Mum</span></h1>
+        <p class="lede">A trip around the world in watercolour, through the places we've been lucky enough to see with you.</p>
+      </div>
+      <div class="globe-wrap">
+        <div class="orbit" aria-hidden="true"><svg viewBox="0 0 30 26"><path d="M2 13 L28 4 L20 22 L14 15 Z" fill="currentColor"/><path d="M14 15 L28 4" stroke="var(--paper)" stroke-width="1.2"/></svg></div>
+        <button class="globe" type="button" id="globe" aria-label="Paint a new world"><canvas id="globeWash" aria-hidden="true"></canvas></button>
+        <p class="globe-cap">Tap the globe to repaint it</p>
+      </div>
     </div>
 
     <div class="pass" role="group" aria-label="Boarding pass">
@@ -391,7 +569,7 @@ dialog#lightbox::backdrop { background: rgba(42, 47, 69, .78); }
           <div class="field"><span>Passenger</span><b>Mum</b></div>
           <div class="field"><span>Date</span><b>09 NOV</b></div>
           <div class="field"><span>Seat</span><b>55A</b></div>
-          <div class="field"><span>Stops</span><b>4</b></div>
+          <div class="field"><span>Crew</span><b>Ahmed &amp; Omar</b></div>
           <div class="field"><span>Co-pilot</span><b>Hamdy the bear</b></div>
         </div>
       </div>
@@ -407,10 +585,11 @@ dialog#lightbox::backdrop { background: rgba(42, 47, 69, .78); }
 </header>
 
 <main>
-  <section class="itinerary" aria-labelledby="itin-title">
+  <section class="itinerary" id="itinerary" aria-labelledby="itin-title">
     <div class="wrap">
       <p class="eyebrow">Itinerary</p>
       <h2 id="itin-title">Four stops, painted in order</h2>
+      <p class="how">At every stop: stamp your passport, tap the pencil sketches to paint them into colour, and look out for Hamdy. He's hiding somewhere in each country.</p>
       <ol class="stops-list" id="stopsList"></ol>
     </div>
   </section>
@@ -419,35 +598,37 @@ dialog#lightbox::backdrop { background: rgba(42, 47, 69, .78); }
 
   <section class="finale" id="birthday" aria-labelledby="letter-title">
     <div class="wrap finale-grid">
-      <div class="cake-wrap" id="cakeWrap">
-        <canvas class="wash" id="cakeWash" aria-hidden="true"></canvas>
-        <svg viewBox="0 0 320 300" role="img" aria-label="A birthday cake with two candles shaped like the number 55">
-          <defs>
-            <pattern id="stripeA" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
-              <rect width="14" height="14" fill="#f6c8d3"/><rect width="6" height="14" fill="#d4637f"/>
-            </pattern>
-            <pattern id="stripeB" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
-              <rect width="14" height="14" fill="#cfe2f3"/><rect width="6" height="14" fill="#3f86c4"/>
-            </pattern>
-            <radialGradient id="flameGrad" cx="50%" cy="70%" r="60%">
-              <stop offset="0" stop-color="#fff6c8"/><stop offset=".55" stop-color="#e9a23b"/><stop offset="1" stop-color="#d8483a" stop-opacity=".2"/>
-            </radialGradient>
-          </defs>
-          <g filter="url(#ink-rough)">
-            <ellipse cx="160" cy="268" rx="140" ry="18" fill="#e7e2d6" stroke="#2a2f45" stroke-width="2"/>
-            <rect x="52" y="178" width="216" height="86" rx="10" fill="#f3d9b5" stroke="#2a2f45" stroke-width="2"/>
-            <path d="M52 196c14 0 14 18 28 18s14-14 28-14 14 22 28 22 14-16 28-16 14 20 28 20 14-18 28-18 14 12 28 12 14-14 18-14v-14c0-6-4-10-10-10H62c-6 0-10 4-10 10z" fill="#d4637f" fill-opacity=".85" stroke="#2a2f45" stroke-width="2"/>
-            <g fill="#e9a23b"><circle cx="90" cy="240" r="4"/><circle cx="140" cy="232" r="4"/><circle cx="196" cy="244" r="4"/><circle cx="240" cy="230" r="4"/></g>
-            <g fill="#2a9d96"><circle cx="112" cy="250" r="3.5"/><circle cx="170" cy="252" r="3.5"/><circle cx="222" cy="252" r="3.5"/></g>
-            <text x="98" y="176" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="104" fill="url(#stripeA)" stroke="#2a2f45" stroke-width="2.5" text-anchor="middle">5</text>
-            <text x="222" y="176" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="104" fill="url(#stripeB)" stroke="#2a2f45" stroke-width="2.5" text-anchor="middle">5</text>
-            <path d="M100 100v-10M222 100v-10" stroke="#2a2f45" stroke-width="2.5" stroke-linecap="round"/>
-          </g>
-          <path class="flame a" d="M100 92c-9-8-9-20 0-34 9 14 9 26 0 34z" fill="url(#flameGrad)" stroke="#d8483a" stroke-width="1"/>
-          <path class="flame b" d="M222 92c-9-8-9-20 0-34 9 14 9 26 0 34z" fill="url(#flameGrad)" stroke="#d8483a" stroke-width="1"/>
-          <path class="smoke" d="M100 88c-6-8 6-14 0-22s6-14 0-20"/>
-          <path class="smoke" d="M222 88c-6-8 6-14 0-22s6-14 0-20"/>
-        </svg>
+      <div class="cake-col">
+        <div class="cake-wrap" id="cakeWrap">
+          <canvas class="wash" id="cakeWash" aria-hidden="true"></canvas>
+          <svg viewBox="0 0 320 300" role="img" aria-label="A birthday cake with two candles shaped like the number 55">
+            <defs>
+              <pattern id="stripeA" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+                <rect width="14" height="14" fill="#f6c8d3"/><rect width="6" height="14" fill="#d4637f"/>
+              </pattern>
+              <pattern id="stripeB" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+                <rect width="14" height="14" fill="#cfe2f3"/><rect width="6" height="14" fill="#3f86c4"/>
+              </pattern>
+              <radialGradient id="flameGrad" cx="50%" cy="70%" r="60%">
+                <stop offset="0" stop-color="#fff6c8"/><stop offset=".55" stop-color="#e9a23b"/><stop offset="1" stop-color="#d8483a" stop-opacity=".2"/>
+              </radialGradient>
+            </defs>
+            <g filter="url(#ink-rough)">
+              <ellipse cx="160" cy="268" rx="140" ry="18" fill="#e7e2d6" stroke="#262b40" stroke-width="2"/>
+              <rect x="52" y="178" width="216" height="86" rx="10" fill="#f3d9b5" stroke="#262b40" stroke-width="2"/>
+              <path d="M52 196c14 0 14 18 28 18s14-14 28-14 14 22 28 22 14-16 28-16 14 20 28 20 14-18 28-18 14 12 28 12 14-14 18-14v-14c0-6-4-10-10-10H62c-6 0-10 4-10 10z" fill="#d4637f" fill-opacity=".85" stroke="#262b40" stroke-width="2"/>
+              <g fill="#e9a23b"><circle cx="90" cy="240" r="4"/><circle cx="140" cy="232" r="4"/><circle cx="196" cy="244" r="4"/><circle cx="240" cy="230" r="4"/></g>
+              <g fill="#2a9d96"><circle cx="112" cy="250" r="3.5"/><circle cx="170" cy="252" r="3.5"/><circle cx="222" cy="252" r="3.5"/></g>
+              <text x="98" y="176" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="104" fill="url(#stripeA)" stroke="#262b40" stroke-width="2.5" text-anchor="middle">5</text>
+              <text x="222" y="176" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="104" fill="url(#stripeB)" stroke="#262b40" stroke-width="2.5" text-anchor="middle">5</text>
+              <path d="M100 100v-10M222 100v-10" stroke="#262b40" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+            <path class="flame a" d="M100 92c-9-8-9-20 0-34 9 14 9 26 0 34z" fill="url(#flameGrad)" stroke="#d8483a" stroke-width="1"/>
+            <path class="flame b" d="M222 92c-9-8-9-20 0-34 9 14 9 26 0 34z" fill="url(#flameGrad)" stroke="#d8483a" stroke-width="1"/>
+            <path class="smoke" d="M100 88c-6-8 6-14 0-22s6-14 0-20"/>
+            <path class="smoke" d="M222 88c-6-8 6-14 0-22s6-14 0-20"/>
+          </svg>
+        </div>
         <button class="btn" id="blowBtn" type="button">Make a wish and blow</button>
         <p class="wish-msg" id="wishMsg" aria-live="polite"></p>
       </div>
@@ -457,7 +638,7 @@ dialog#lightbox::backdrop { background: rgba(42, 47, 69, .78); }
         <h2 id="letter-title">Dear Mum,</h2>
         <div class="body">
           <p>You taught us that the world is big and worth seeing, and then you went and showed it to us, one trip at a time.</p>
-          <p>Shanghai, Italy, two winters in Germany, and all the ordinary days back home in Egypt. Every place was better because you were in it, laughing, planning, and taking far too many photos.</p>
+          <p>Shanghai, Milan and Lake Como, two winters in Germany, and all the ordinary days back home in Egypt. Every place was better because you were in it, laughing, planning, and taking far too many photos.</p>
           <p>You paint with water and colour. We tried to paint with photographs. Here's to 55 years of you, and to every journey still ahead.</p>
           <p class="sign">Happy birthday. With all our love,<br>Ahmed &amp; Omar</p>
         </div>
@@ -487,8 +668,21 @@ dialog#lightbox::backdrop { background: rgba(42, 47, 69, .78); }
 </main>
 
 <footer>
-  <div class="wrap">Painted with love for 9 November 2026</div>
+  <div class="wrap">Painted with love by Ahmed &amp; Omar, for 9 November 2026</div>
 </footer>
+
+<nav class="hud" id="hud" aria-label="Journey progress" hidden>
+  <a href="#itinerary" title="Passport stamps">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="var(--rose)" stroke-width="2"/><circle cx="12" cy="12" r="5" fill="none" stroke="var(--rose)" stroke-width="1.5"/></svg>
+    <span><b id="hudStamps">0</b>/4 stamps</span>
+  </a>
+  <span class="sep" aria-hidden="true"></span>
+  <a href="#itinerary" title="Hamdys found">
+    <svg viewBox="0 0 60 64" aria-hidden="true"><use href="#hamdy-art"/></svg>
+    <span><b id="hudHamdy">0</b>/4 Hamdys</span>
+  </a>
+</nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <dialog id="lightbox" aria-label="Photo">
   <div class="lb-card">
@@ -507,18 +701,19 @@ dialog#lightbox::backdrop { background: rgba(42, 47, 69, .78); }
 <script>
 /* =========================================================
    TRIP DATA: add photos to each stop's `photos` list.
-   wide: true  → landscape photo that spans two columns.
+   hamdy.spot: where he hides: "panel", "prints", "text" or "leg".
    ========================================================= */
 const STOPS = [
   {
-    id: "china", name: "China", city: "Shanghai", when: "May 2024",
+    id: "china", name: "China", when: "May 2024",
     stampTop: "Shanghai", stampBottom: "May 2024", stampMid: "PVG",
     pigments: ["--vermilion", "--gamboge", "--rose"],
-    greet: { text: "生日快乐", lang: "zh", gloss: "shēngrì kuàilè · happy birthday" },
-    note: "Bead stalls under walls of carved characters, a castle at the end of the path, a garden ruled by the Queen of Hearts, the Bund lit up at night, and you on stage in Shanghai. Hamdy the bear came along for all of it. May 2024 filled a whole sketchbook on its own.",
+    greet: { text: "生日快乐", lang: "zh", gloss: "Happy birthday", say: "say it: shēng-rì kuài-lè" },
+    note: "Bead stalls under walls of carved characters, a castle at the end of the path, a garden ruled by the Queen of Hearts, the Bund lit up at night, and you on stage in Shanghai. Hamdy the bear came along for all of it.",
+    hamdy: { spot: "panel", line: "你好! Hamdy was here first." },
     photos: [
       { src: "photos/china/shanghai-conference.jpg", w: 1050, h: 1400, caption: "Shanghai 2024: a certificate of appreciation, and one very proud family." },
-      { src: "photos/china/disneyland-selfie.jpg", w: 1400, h: 1050, wide: true, caption: "Shanghai Disneyland, with the castle peeking over our shoulders." },
+      { src: "photos/china/disneyland-selfie.jpg", w: 1400, h: 1050, caption: "Shanghai Disneyland, with the castle peeking over our shoulders." },
       { src: "photos/china/queen-of-hearts-garden.jpg", w: 1050, h: 1400, caption: "In the Queen of Hearts' garden. \"Embrace the calm within.\"" },
       { src: "photos/china/bead-market.jpg", w: 1050, h: 1400, caption: "Bead hunting at the market, with Hamdy keeping watch in his sunglasses." },
       { src: "photos/china/hamdy-on-the-bund.jpg", w: 1050, h: 1400, caption: "The Bund at night. Hamdy refused to take his sunglasses off." },
@@ -527,33 +722,49 @@ const STOPS = [
     ]
   },
   {
-    id: "italy", name: "Italy", city: "Italia", when: "January 2025",
-    stampTop: "Italia", stampBottom: "Jan 2025", stampMid: "IT",
+    id: "italy", name: "Italy", when: "January 2025",
+    stampTop: "Milano · Como", stampBottom: "Jan 2025", stampMid: "IT",
     pigments: ["--sienna", "--sap", "--cerulean"],
-    greet: { text: "Buon compleanno", lang: "it", gloss: "happy birthday" },
-    note: "Winter light on old stone, espresso standing at the bar, and you stopping every few steps because the view needed looking at properly.",
-    photos: []
+    greet: { text: "Buon compleanno", lang: "it", gloss: "Happy birthday", say: "say it: bwon kom-pleh-AN-no" },
+    note: "Milan in January: the Duomo glowing at night, the glass dome of the Galleria, the frog fountain in a quiet cloister, then a grey, windy ferry across Lake Como and dinner up in the hills as the mountains turned blue.",
+    hamdy: { spot: "prints", line: "Ciao! Hamdy did the Duomo too." },
+    photos: [
+      { src: "photos/italy/duomo-at-night.jpg", w: 1400, h: 1050, caption: "The Duomo lit up at night, and three very happy faces." },
+      { src: "photos/italy/galleria-dome.jpg", w: 1050, h: 1400, caption: "Under the glass dome of the Galleria Vittorio Emanuele II, the whole crew together." },
+      { src: "photos/italy/frog-cloister.jpg", w: 1050, h: 1400, caption: "The frog fountain cloister at Santa Maria delle Grazie, home of The Last Supper." },
+      { src: "photos/italy/lake-como-ferry.jpg", w: 1050, h: 1400, caption: "Lake Como from the ferry. Cold wind, warm smile." },
+      { src: "photos/italy/dinner-in-the-hills.jpg", w: 1400, h: 1050, caption: "Dinner up in the hills while the mountains turned blue outside." }
+    ]
   },
   {
-    id: "germany", name: "Germany", city: "Deutschland", when: "January 2025 & January 2026",
+    id: "germany", name: "Germany", when: "January 2025 & January 2026",
     stampTop: "Deutschland", stampBottom: "Jan 25 · Jan 26", stampMid: "DE",
     pigments: ["--paynes", "--cerulean", "--sap"],
-    greet: { text: "Alles Gute zum Geburtstag", lang: "de", gloss: "all the best on your birthday" },
+    greet: { text: "Alles Gute zum Geburtstag", lang: "de", gloss: "All the best on your birthday", say: "say it: AH-les GOO-teh tsoom ge-BOORTS-tahk" },
     note: "Two Januaries, two winters, and the same rule both times: cold outside, warm wherever you were.",
+    hamdy: { spot: "text", line: "Hallo! Hamdy packed his scarf." },
     photos: []
   },
   {
-    id: "egypt", name: "Egypt", city: "Home", when: "All the days in between",
+    id: "egypt", name: "Egypt", when: "All the days in between",
     stampTop: "Misr · Home", stampBottom: "Always", stampMid: "EG",
     pigments: ["--turquoise", "--ochre", "--cerulean"],
-    greet: { text: "كل سنة وانتي طيبة", lang: "ar", gloss: "kol sana w enti tayba · many happy returns" },
-    note: "The trips are wonderful, but this is where every journey starts and ends. Sunny afternoons, family tables, and you at the centre of all of it.",
+    greet: { text: "كل سنة وانتي طيبة", lang: "ar", gloss: "Many happy returns", say: "say it: kol sana w enti tayba" },
+    note: "The trips are wonderful, but this is where every journey starts and ends. Family tables, long afternoons, and you at the centre of all of it.",
+    hamdy: { spot: "leg", line: "Ahlan! Hamdy is home." },
     photos: []
   }
 ];
 
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+/* ---------- progress (kept on this device) ---------- */
+const KEY = "mum55-journey";
+let progress = { stamps: [], hamdy: [] };
+try { const saved = JSON.parse(localStorage.getItem(KEY) || "null"); if (saved && saved.stamps) progress = saved; } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(progress)); } catch (e) {} }
 
 /* ---------- seeded randomness ---------- */
 function rng(seed) {
@@ -591,37 +802,37 @@ function fillPoly(ctx, pts) {
   for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
   ctx.closePath(); ctx.fill();
 }
-
-/* paint a set of blobs onto a canvas, blooming in over a few frames */
-function paintWash(canvas, blobs, seed, opts = {}) {
+function sizeCanvas(canvas) {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const w = canvas.clientWidth, h = canvas.clientHeight;
-  if (!w || !h) return;
+  if (!w || !h) return null;
   canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
   const ctx = canvas.getContext("2d");
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.clearRect(0, 0, w, h);
+  return { ctx, w, h };
+}
+/* paint blobs onto a canvas, blooming in over a few frames */
+function paintWash(canvas, blobs, seed, opts = {}) {
+  const s = sizeCanvas(canvas); if (!s) return;
+  const { ctx, w, h } = s;
+  if (opts.base) { ctx.fillStyle = opts.base; ctx.fillRect(0, 0, w, h); }
   const r = rng(seed);
   const layers = opts.layers || 30;
-  const jobs = blobs.map(b => {
-    const rad = b.r * Math.min(w, h * 1.6);
-    return { color: b.c, base: basePoly(b.x * w, b.y * h, rad, r, 10, b.sx || 1.6, b.sy || 1), alpha: b.a || 0.045 };
-  });
+  const jobs = blobs.map(b => ({
+    color: b.c, alpha: b.a || 0.045,
+    base: basePoly(b.x * w, b.y * h, b.r * Math.min(w, h * 1.6), r, 10, b.sx || 1.4, b.sy || 1)
+  }));
   let layer = 0;
   const step = () => {
     const per = reduceMotion || opts.instant ? layers : 3;
     for (let k = 0; k < per && layer < layers; k++, layer++) {
-      for (const j of jobs) {
-        ctx.globalAlpha = j.alpha; ctx.fillStyle = j.color;
-        fillPoly(ctx, deform(j.base, 3, 0.42, r));
-      }
+      for (const j of jobs) { ctx.globalAlpha = j.alpha; ctx.fillStyle = j.color; fillPoly(ctx, deform(j.base, 3, 0.42, r)); }
     }
     if (layer < layers) requestAnimationFrame(step);
-    else granulate(ctx, jobs, r, w, h);
+    else { granulate(ctx, jobs, r, w, h); ctx.globalAlpha = 1; }
   };
   step();
 }
-/* pigment granulation: tiny specks settling into the paper */
 function granulate(ctx, jobs, r, w, h) {
   for (const j of jobs) {
     ctx.fillStyle = j.color; ctx.globalAlpha = 0.18;
@@ -633,30 +844,56 @@ function granulate(ctx, jobs, r, w, h) {
       ctx.beginPath(); ctx.arc(x, y, r() * 1.4 + .3, 0, Math.PI * 2); ctx.fill();
     }
   }
-  ctx.globalAlpha = 1;
+}
+/* a few quick drops of paint, for celebrations */
+function splash(canvas, count, colors, seed) {
+  const ctx = canvas.getContext("2d");
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  const r = rng(seed);
+  let n = 0;
+  const drop = () => {
+    for (let k = 0; k < 3 && n < count; k++, n++) {
+      const x = w * (.15 + r() * .7), y = h * (.15 + r() * .7), rad = 6 + r() * 16;
+      const base = basePoly(x, y, rad, r, 8, 1, 1);
+      ctx.fillStyle = colors[n % colors.length];
+      for (let l = 0; l < 10; l++) { ctx.globalAlpha = .08; fillPoly(ctx, deform(base, 2, .4, r)); }
+    }
+    ctx.globalAlpha = 1;
+    if (n < count) setTimeout(drop, reduceMotion ? 0 : 60);
+  };
+  drop();
 }
 
 /* ---------- passport stamps ---------- */
 let stampCount = 0;
 function stampSVG(stop, color, tilt) {
   const id = "arc" + (stampCount++);
-  return `<svg class="stamp" viewBox="0 0 160 160" style="transform:rotate(${tilt}deg)" aria-hidden="true">
-    <g filter="url(#stamp-wear)" fill="none" stroke="${color}" color="${color}">
+  return `<svg class="stamp" viewBox="0 0 160 160" style="--rot:${tilt}deg" aria-hidden="true">
+    <g filter="url(#stamp-wear)" fill="none" stroke="${color}">
       <circle cx="80" cy="80" r="74" stroke-width="3.5"/>
       <circle cx="80" cy="80" r="50" stroke-width="2"/>
-      <path id="${id}t" d="M22 80a58 58 0 0 1 116 0" />
-      <path id="${id}b" d="M18 80a62 62 0 0 0 124 0" />
-      <text font-size="13" fill="currentColor" stroke="none"><textPath href="#${id}t" startOffset="50%" text-anchor="middle">${stop.stampTop}</textPath></text>
-      <text font-size="11" fill="currentColor" stroke="none"><textPath href="#${id}b" startOffset="50%" text-anchor="middle">${stop.stampBottom}</textPath></text>
-      <text x="80" y="92" font-size="30" font-weight="500" fill="currentColor" stroke="none" text-anchor="middle" style="letter-spacing:.06em">${stop.stampMid}</text>
+      <path id="${id}t" d="M22 80a58 58 0 0 1 116 0"/>
+      <path id="${id}b" d="M18 80a62 62 0 0 0 124 0"/>
+      <text font-size="13" fill="${color}" stroke="none"><textPath href="#${id}t" startOffset="50%" text-anchor="middle">${stop.stampTop}</textPath></text>
+      <text font-size="11" fill="${color}" stroke="none"><textPath href="#${id}b" startOffset="50%" text-anchor="middle">${stop.stampBottom}</textPath></text>
+      <text x="80" y="92" font-size="30" font-weight="500" fill="${color}" stroke="none" text-anchor="middle" style="letter-spacing:.06em">${stop.stampMid}</text>
       <path d="M60 104h40" stroke-width="1.5"/>
     </g>
   </svg>`;
+}
+function hamdySpot(s) {
+  return `<div class="spot spot-${s.hamdy.spot}" data-hamdy="${s.id}">
+    <span class="bubble" hidden>${esc(s.hamdy.line)}</span>
+    <button class="hamdy" type="button" aria-label="Something fuzzy is hiding here" style="--hr:${s.hamdy.spot === "prints" ? 8 : -6}deg">
+      <svg viewBox="0 0 60 64" aria-hidden="true"><use href="#hamdy-art"/></svg>
+    </button>
+  </div>`;
 }
 
 /* ---------- build itinerary + stops ---------- */
 const allPhotos = [];
 function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+const brushSVG = `<svg aria-hidden="true"><use href="#brush-icon"/></svg>`;
 
 function build() {
   const list = document.getElementById("stopsList");
@@ -666,42 +903,62 @@ function build() {
 
   STOPS.forEach((s, i) => {
     const ink = css(s.pigments[0]);
+    const tilt = tilts[i % tilts.length];
     list.insertAdjacentHTML("beforeend",
-      `<li><a href="#${s.id}">${stampSVG(s, ink, tilts[i % tilts.length])}<span class="name">${esc(s.name)}</span><span class="when">${esc(s.when)}</span></a></li>`);
+      `<li data-stop="${s.id}"><a href="#${s.id}">${stampSVG(s, ink, tilt)}<span class="name">${esc(s.name)}</span><span class="when">${esc(s.when)}</span><span class="status">Not stamped yet</span></a></li>`);
 
     let prints = "";
     if (s.photos.length) {
       s.photos.forEach((p, k) => {
-        const idx = allPhotos.push({ ...p, stop: s.name }) - 1;
-        const tilt = ((k * 37 + i * 11) % 7 - 3) * 0.7;
-        prints += `<figure class="print${p.wide ? " wide" : ""}" style="--tilt:${tilt.toFixed(1)}deg;--tape:${(k % 2 ? 4 : -3)}deg;--tape-color:var(${tapes[(k + i) % tapes.length]})">
-          <button type="button" data-idx="${idx}" aria-label="Open photo: ${esc(p.caption)}">
+        const idx = allPhotos.push({ ...p }) - 1;
+        const t = ((k * 37 + i * 11) % 7 - 3) * 0.7;
+        prints += `<figure class="print" data-idx="${idx}" style="--tilt:${t.toFixed(1)}deg;--tape:${(k % 2 ? 4 : -3)}deg;--tape-color:var(${tapes[(k + i) % tapes.length]})">
+          <button class="media" type="button" aria-label="Paint this sketch into colour: ${esc(p.caption)}">
             <img src="${esc(p.src)}" width="${p.w}" height="${p.h}" alt="${esc(p.caption)}" loading="lazy" decoding="async">
+            <canvas class="sketch" aria-hidden="true"></canvas>
+            <span class="hint" aria-hidden="true">${brushSVG}Tap to paint</span>
           </button>
           <figcaption>${esc(p.caption)}</figcaption>
         </figure>`;
       });
     } else {
-      for (let k = 0; k < 3; k++) {
-        prints += `<figure class="print empty"><div class="frame">${k === 1 ? "Still drying…<br>photos from " + esc(s.name) + " coming soon" : ""}</div></figure>`;
-      }
+      for (let k = 0; k < 3; k++) prints += `<figure class="print empty"><div class="frame">${k === 1 ? "Still drying…<br>photos from " + esc(s.name) + " coming soon" : ""}</div></figure>`;
     }
 
     const g = s.greet;
+    const spot = s.hamdy.spot;
     host.insertAdjacentHTML("beforeend", `
-      <section class="stop" id="${s.id}" aria-labelledby="${s.id}-title">
+      <section class="stop" id="${s.id}" aria-labelledby="${s.id}-title" style="--pig:var(${s.pigments[0]})">
         <div class="wrap">
           <div class="stop-head">
-            <canvas class="wash" data-stop="${i}" aria-hidden="true"></canvas>
-            <div>
+            <div class="stop-text">
               <p class="eyebrow">Stop ${i + 1} of ${STOPS.length} · ${esc(s.when)}</p>
               <h2 id="${s.id}-title">${esc(s.name)}</h2>
-              <p class="greet"><span class="native" lang="${g.lang}"${g.lang === "ar" ? ' dir="rtl"' : ""}>${esc(g.text)}</span><span class="gloss">${esc(g.gloss)}</span></p>
+              <button class="tag" type="button" aria-label="${esc(g.gloss)}: ${esc(g.say)}">
+                <span class="native" lang="${g.lang}"${g.lang === "ar" ? ' dir="rtl"' : ""}>${esc(g.text)}</span>
+                <span class="gloss">${esc(g.gloss)}</span>
+                <span class="say">${esc(g.say)}</span>
+              </button>
               <p class="note">${esc(s.note)}</p>
+              ${spot === "text" ? hamdySpot(s) : ""}
             </div>
-            ${stampSVG(s, ink, tilts[(i + 1) % tilts.length])}
+            <div class="panel-col">
+              <div class="panel">
+                <canvas class="wash" data-stop="${i}" aria-hidden="true"></canvas>
+                <div class="slot" data-slot="${s.id}">
+                  <div class="empty-ring">Your ${esc(s.name)} stamp goes here</div>
+                  ${stampSVG(s, ink, -tilt)}
+                </div>
+                ${spot === "panel" ? hamdySpot(s) : ""}
+              </div>
+              <button class="btn stamp-btn" type="button" data-stamp="${s.id}">Stamp my passport</button>
+            </div>
           </div>
-          <div class="prints">${prints}</div>
+          ${s.photos.length ? `<div class="prints-bar"><p>Tap a sketch to paint it into colour.</p><button class="btn small" type="button" data-paint-all="${s.id}">Paint them all</button></div>` : ""}
+          <div class="prints-wrap">
+            ${spot === "prints" ? hamdySpot(s) : ""}
+            <div class="prints">${prints}</div>
+          </div>
         </div>
       </section>`);
 
@@ -711,19 +968,14 @@ function build() {
     const flip = i % 2 ? -1 : 1;
     host.insertAdjacentHTML("beforeend", `
       <div class="leg wrap" style="--leg-color:var(${legColor})">
-        <svg viewBox="0 0 420 90" aria-hidden="true">
+        <svg class="route-line" viewBox="0 0 420 90" aria-hidden="true">
           <path class="path" d="M20 70 C 120 ${45 - flip * 35}, 300 ${45 + flip * 35}, 390 24"/>
           <g transform="translate(390 24) rotate(-28)"><path class="plane" d="M-14 -8 L14 0 L-14 8 L-8 0 Z"/></g>
         </svg>
         <span class="eyebrow">${esc(s.name)} → ${next ? esc(next.name) : "Home"}</span>
         <p>${legText}</p>
+        ${spot === "leg" ? hamdySpot(s) : ""}
       </div>`);
-  });
-
-  if (!allPhotos.length) return;
-  host.addEventListener("click", e => {
-    const b = e.target.closest("button[data-idx]");
-    if (b) openLightbox(+b.dataset.idx);
   });
 }
 
@@ -731,30 +983,35 @@ function build() {
 function stopBlobs(s) {
   const [a, b, c] = s.pigments.map(css);
   return [
-    { x: .2, y: .5, r: .32, c: a, a: .05 },
-    { x: .5, y: .38, r: .26, c: b, a: .04 },
-    { x: .82, y: .58, r: .24, c: c, a: .035 }
+    { x: .38, y: .5, r: .3, c: a, a: .05 },
+    { x: .62, y: .42, r: .25, c: b, a: .045 },
+    { x: .55, y: .66, r: .2, c: c, a: .04 }
   ];
 }
-function heroBlobs() {
-  return [
-    { x: .18, y: .45, r: .3, c: css("--rose"), a: .05 },
-    { x: .5, y: .62, r: .26, c: css("--gamboge"), a: .045 },
-    { x: .8, y: .4, r: .28, c: css("--cerulean"), a: .04 },
-    { x: .62, y: .2, r: .14, c: css("--turquoise"), a: .035 }
-  ];
+function globeBlobs(seed) {
+  const r = rng(seed);
+  const land = [css("--sap"), css("--ochre"), css("--sap"), css("--sienna"), css("--turquoise")];
+  const blobs = [{ x: .5, y: .5, r: .55, c: css("--cerulean"), a: .05, sx: 1, sy: 1 }];
+  for (let i = 0; i < 5; i++) blobs.push({ x: .2 + r() * .6, y: .2 + r() * .6, r: .08 + r() * .1, c: land[i], a: .05, sx: 1 + r() * .6, sy: .8 + r() * .4 });
+  return blobs;
 }
 function cakeBlobs() {
   return [
-    { x: .35, y: .55, r: .34, c: css("--rose"), a: .04, sx: 1, sy: 1 },
-    { x: .65, y: .45, r: .3, c: css("--gamboge"), a: .04, sx: 1, sy: 1 }
+    { x: .4, y: .55, r: .3, c: css("--rose"), a: .04, sx: 1, sy: 1 },
+    { x: .62, y: .45, r: .26, c: css("--gamboge"), a: .04, sx: 1, sy: 1 }
   ];
 }
-
-function paintAll(first) {
-  paintWash(document.getElementById("heroWash"), heroBlobs(), 55, { instant: !first });
+let globeSeed = 55;
+function paintGlobe(instant) { paintWash(document.getElementById("globeWash"), globeBlobs(globeSeed), globeSeed, { instant, layers: 26 }); }
+function paintCover() {
+  paintWash(document.getElementById("coverWash"), [
+    { x: .3, y: .3, r: .5, c: css("--cover-deep"), a: .05, sx: 1, sy: 1.2 },
+    { x: .7, y: .75, r: .45, c: css("--paynes"), a: .04, sx: 1, sy: 1.2 }
+  ], 7, { instant: true, layers: 22, base: css("--cover") });
+}
+function paintStops(first) {
   paintWash(document.getElementById("cakeWash"), cakeBlobs(), 911, { instant: true });
-  document.querySelectorAll(".stop-head .wash").forEach(cv => {
+  document.querySelectorAll(".panel .wash").forEach(cv => {
     const i = +cv.dataset.stop;
     const run = () => paintWash(cv, stopBlobs(STOPS[i]), 100 + i * 17, { instant: !first });
     if (first && "IntersectionObserver" in window && !reduceMotion) {
@@ -764,14 +1021,173 @@ function paintAll(first) {
   });
 }
 
+/* ---------- toast + HUD ---------- */
+const toastEl = document.getElementById("toast");
+let toastT;
+function toast(msg) {
+  toastEl.textContent = msg; toastEl.classList.add("show");
+  clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove("show"), 3600);
+}
+function updateHud(bump) {
+  document.getElementById("hudStamps").textContent = progress.stamps.length;
+  document.getElementById("hudHamdy").textContent = progress.hamdy.length;
+  if (bump && !reduceMotion) { const h = document.getElementById("hud"); h.classList.remove("bump"); void h.offsetWidth; h.classList.add("bump"); }
+}
+
+/* ---------- stamping ---------- */
+function applyStamp(id, animate) {
+  const slot = document.querySelector(`[data-slot="${id}"]`);
+  const btn = document.querySelector(`[data-stamp="${id}"]`);
+  const li = document.querySelector(`.stops-list li[data-stop="${id}"]`);
+  if (!animate) slot.classList.add("instant");
+  slot.classList.add("stamped");
+  btn.disabled = true; btn.textContent = "Stamped";
+  li.classList.add("got"); li.querySelector(".status").textContent = "Stamped";
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-stamp]");
+  if (!b || b.disabled) return;
+  const id = b.dataset.stamp;
+  if (progress.stamps.includes(id)) return;
+  progress.stamps.push(id); save();
+  applyStamp(id, true);
+  const s = STOPS.find(x => x.id === id);
+  const panel = b.closest(".panel-col").querySelector(".panel .wash");
+  setTimeout(() => splash(panel, 9, s.pigments.map(css), id.length * 31), reduceMotion ? 0 : 300);
+  updateHud(true);
+  if (progress.stamps.length === STOPS.length) toast("Every stamp collected! Your passport is full. Head home for cake.");
+  else toast(`${s.name} stamped. ${STOPS.length - progress.stamps.length} to go.`);
+});
+
+/* ---------- Hamdy hide and seek ---------- */
+function showHamdy(spot, animate) {
+  spot.classList.add("found");
+  spot.querySelector(".bubble").hidden = false;
+  const btn = spot.querySelector(".hamdy");
+  btn.setAttribute("aria-label", "Hamdy the bear, found");
+  if (!animate) spot.querySelector("svg").style.animation = "none";
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest(".hamdy");
+  if (!b) return;
+  const spot = b.closest(".spot");
+  const id = spot.dataset.hamdy;
+  if (progress.hamdy.includes(id)) { const bub = spot.querySelector(".bubble"); bub.hidden = !bub.hidden; return; }
+  progress.hamdy.push(id); save();
+  showHamdy(spot, true);
+  updateHud(true);
+  const left = STOPS.length - progress.hamdy.length;
+  toast(left ? `You found Hamdy! ${left} more hiding spot${left > 1 ? "s" : ""} to go.` : "You found every Hamdy! He says: happy birthday, travel buddy.");
+});
+
+/* ---------- greeting tags swing ---------- */
+document.addEventListener("click", e => {
+  const t = e.target.closest(".tag");
+  if (!t || reduceMotion) return;
+  t.classList.remove("swing"); void t.offsetWidth; t.classList.add("swing");
+});
+
+/* ---------- photos: pencil sketch → watercolour ---------- */
+function makeSketch(fig) {
+  const img = fig.querySelector("img");
+  const cv = fig.querySelector("canvas.sketch");
+  const draw = () => {
+    if (fig.classList.contains("revealed")) return;
+    const w = img.clientWidth, h = img.clientHeight;
+    if (!w || !h) return;
+    const scale = Math.min(window.devicePixelRatio || 1, 1.5);
+    const W = Math.round(w * scale), H = Math.round(h * scale);
+    cv.width = W; cv.height = H;
+    const c = cv.getContext("2d", { willReadFrequently: true });
+    c.drawImage(img, 0, 0, W, H);
+    let d;
+    try { d = c.getImageData(0, 0, W, H); } catch (err) { cv.remove(); return; }
+    const p = d.data, L = new Float32Array(W * H);
+    for (let i = 0, j = 0; i < p.length; i += 4, j++) L[j] = .3 * p[i] + .59 * p[i + 1] + .11 * p[i + 2];
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        const j = y * W + x, l = L[j];
+        const gx = x < W - 1 ? Math.abs(L[j + 1] - l) : 0;
+        const gy = y < H - 1 ? Math.abs(L[j + W] - l) : 0;
+        let v = 247 - (255 - l) * .5 - (gx + gy) * 1.6;
+        v = v < 40 ? 40 : v;
+        const o = j * 4;
+        p[o] = v + 3; p[o + 1] = v; p[o + 2] = v - 7; p[o + 3] = 255;
+      }
+    }
+    c.putImageData(d, 0, 0);
+    fig.dataset.ready = "1";
+  };
+  if (img.complete && img.naturalWidth) draw(); else img.addEventListener("load", draw, { once: true });
+}
+function revealBloom(fig, px, py) {
+  if (fig.classList.contains("revealed") || fig.classList.contains("revealing")) return;
+  const cv = fig.querySelector("canvas.sketch");
+  fig.classList.add("revealing");
+  const done = () => { fig.classList.remove("revealing"); fig.classList.add("revealed"); fig.querySelector(".media").setAttribute("aria-label", "Open photo: " + allPhotos[+fig.dataset.idx].caption); };
+  if (!cv || !fig.dataset.ready || reduceMotion) { done(); return; }
+  const c = cv.getContext("2d");
+  const W = cv.width, H = cv.height, k = W / cv.clientWidth;
+  const x0 = (px ?? cv.clientWidth / 2) * k, y0 = (py ?? cv.clientHeight / 2) * k;
+  const maxR = Math.hypot(Math.max(x0, W - x0), Math.max(y0, H - y0));
+  const r = rng((x0 * 7 + y0) | 0);
+  c.globalCompositeOperation = "destination-out";
+  const t0 = performance.now(), dur = 1300;
+  const frame = now => {
+    const t = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - t, 2.4);
+    const rad = maxR * e * 1.05 + 10;
+    for (let i = 0; i < 3; i++) {
+      c.globalAlpha = .28;
+      const jx = gauss(r) * rad * .18, jy = gauss(r) * rad * .18;
+      fillPoly(c, deform(basePoly(x0 + jx, y0 + jy, rad * (.55 + r() * .4), r, 9, 1, 1), 2, .3, r));
+    }
+    if (t < 1) requestAnimationFrame(frame); else done();
+  };
+  requestAnimationFrame(frame);
+}
+function brushReveal(fig, x, y) {
+  const cv = fig.querySelector("canvas.sketch");
+  if (!cv || !fig.dataset.ready || fig.classList.contains("revealed") || fig.classList.contains("revealing")) return;
+  const c = cv.getContext("2d"), k = cv.width / cv.clientWidth;
+  const r = rng(((x * 13) ^ (y * 7)) | 0);
+  c.globalCompositeOperation = "destination-out"; c.globalAlpha = .16;
+  fillPoly(c, deform(basePoly(x * k, y * k, 26 * k, r, 7, 1, 1), 2, .35, r));
+  fig.dataset.dabs = (+fig.dataset.dabs || 0) + 1;
+  if (+fig.dataset.dabs > 70) revealBloom(fig, x, y);
+}
+function wirePhotos() {
+  const figs = document.querySelectorAll(".print[data-idx]");
+  const io = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { io.unobserve(en.target); makeSketch(en.target); } }), { rootMargin: "300px" }) : null;
+  figs.forEach(fig => {
+    if (io) io.observe(fig); else makeSketch(fig);
+    const media = fig.querySelector(".media");
+    media.addEventListener("click", e => {
+      if (fig.classList.contains("revealed")) { openLightbox(+fig.dataset.idx); return; }
+      const b = media.getBoundingClientRect();
+      const x = e.clientX ? e.clientX - b.left : b.width / 2, y = e.clientY ? e.clientY - b.top : b.height / 2;
+      revealBloom(fig, x, y);
+    });
+    if (finePointer) media.addEventListener("pointermove", e => {
+      const b = media.getBoundingClientRect();
+      brushReveal(fig, e.clientX - b.left, e.clientY - b.top);
+    });
+  });
+  document.addEventListener("click", e => {
+    const b = e.target.closest("[data-paint-all]");
+    if (!b) return;
+    const sec = document.getElementById(b.dataset.paintAll);
+    sec.querySelectorAll(".print[data-idx]").forEach((fig, i) => setTimeout(() => { if (!fig.dataset.ready) makeSketch(fig); revealBloom(fig); }, reduceMotion ? 0 : i * 180));
+    b.disabled = true; b.textContent = "All painted";
+  });
+}
+
 /* ---------- countdown ---------- */
 function countdown() {
   const el = document.getElementById("countdown");
-  const now = new Date();
-  const y = now.getFullYear();
+  const now = new Date(), y = now.getFullYear();
   const start = new Date(y, 10, 9), end = new Date(y, 10, 10);
   if (now >= start && now < end) { el.textContent = "Now boarding. It's your day!"; return; }
-  let target = now < start ? start : new Date(y + 1, 10, 9);
+  const target = now < start ? start : new Date(y + 1, 10, 9);
   const ms = target - now;
   const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60;
   el.textContent = d > 0 ? `${d} day${d > 1 ? "s" : ""}, ${h}h until take-off` : `${h}h ${m}m until take-off`;
@@ -782,8 +1198,7 @@ const lb = document.getElementById("lightbox");
 let lbIdx = 0;
 function showLb(i) {
   lbIdx = (i + allPhotos.length) % allPhotos.length;
-  const p = allPhotos[lbIdx];
-  const img = document.getElementById("lbImg");
+  const p = allPhotos[lbIdx], img = document.getElementById("lbImg");
   img.src = p.src; img.alt = p.caption;
   document.getElementById("lbCap").textContent = p.caption;
 }
@@ -792,60 +1207,30 @@ document.getElementById("lbPrev").onclick = () => showLb(lbIdx - 1);
 document.getElementById("lbNext").onclick = () => showLb(lbIdx + 1);
 document.getElementById("lbClose").onclick = () => lb.close();
 lb.addEventListener("click", e => { if (e.target === lb) lb.close(); });
-lb.addEventListener("keydown", e => {
-  if (e.key === "ArrowLeft") showLb(lbIdx - 1);
-  if (e.key === "ArrowRight") showLb(lbIdx + 1);
-});
+lb.addEventListener("keydown", e => { if (e.key === "ArrowLeft") showLb(lbIdx - 1); if (e.key === "ArrowRight") showLb(lbIdx + 1); });
 
 /* ---------- candles ---------- */
 document.getElementById("blowBtn").addEventListener("click", function () {
-  const wrap = document.getElementById("cakeWrap");
-  const msg = document.getElementById("wishMsg");
-  if (wrap.classList.contains("out")) {
-    wrap.classList.remove("out");
-    this.textContent = "Make a wish and blow";
-    msg.textContent = "";
-    return;
-  }
+  const wrap = document.getElementById("cakeWrap"), msg = document.getElementById("wishMsg");
+  if (wrap.classList.contains("out")) { wrap.classList.remove("out"); this.textContent = "Make a wish and blow"; msg.textContent = ""; return; }
   wrap.classList.add("out");
   this.textContent = "Light them again";
   msg.textContent = "Wish made. Happy 55th birthday, Mum!";
-  // confetti of watercolour drops
-  const cv = document.getElementById("cakeWash");
-  const ctx = cv.getContext("2d");
-  const w = cv.clientWidth, h = cv.clientHeight;
-  const r = rng(Date.now() & 0xffff);
-  const pig = ["--rose", "--gamboge", "--cerulean", "--turquoise", "--vermilion", "--sap"].map(css);
-  let n = 0;
-  const drop = () => {
-    for (let k = 0; k < 3 && n < 26; k++, n++) {
-      const x = r() * w, y = r() * h, rad = 6 + r() * 18, c = pig[n % pig.length];
-      const base = basePoly(x, y, rad, r, 8, 1, 1);
-      ctx.fillStyle = c;
-      for (let l = 0; l < 10; l++) { ctx.globalAlpha = .07; fillPoly(ctx, deform(base, 2, .4, r)); }
-    }
-    ctx.globalAlpha = 1;
-    if (n < 26) setTimeout(drop, reduceMotion ? 0 : 60);
-  };
-  drop();
+  splash(document.getElementById("cakeWash"), 26, ["--rose", "--gamboge", "--cerulean", "--turquoise", "--vermilion", "--sap"].map(css), Date.now() & 0xffff);
 });
 
 /* ---------- sketchbook ---------- */
-const PAINTS = [
-  ["Rose madder", "--rose"], ["Gamboge", "--gamboge"], ["Cerulean", "--cerulean"],
-  ["Sap green", "--sap"], ["Burnt sienna", "--sienna"], ["Payne's grey", "--paynes"]
-];
+const PAINTS = [["Rose madder", "--rose"], ["Gamboge", "--gamboge"], ["Cerulean", "--cerulean"], ["Sap green", "--sap"], ["Burnt sienna", "--sienna"], ["Payne's grey", "--paynes"]];
 const pc = document.getElementById("paintCanvas");
 const pctx = pc.getContext("2d");
 const prng = rng(2024);
 let paint = { color: css("--cerulean"), name: "Cerulean", size: 26 };
-
 function sizePaintCanvas() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const w = pc.clientWidth, h = pc.clientHeight;
   if (!w) return;
   let snap = null;
-  if (pc.width) { snap = document.createElement("canvas"); snap.width = pc.width; snap.height = pc.height; snap.getContext("2d").drawImage(pc, 0, 0); }
+  if (pc.width > 300) { snap = document.createElement("canvas"); snap.width = pc.width; snap.height = pc.height; snap.getContext("2d").drawImage(pc, 0, 0); }
   pc.width = Math.round(w * dpr); pc.height = Math.round(h * dpr);
   pctx.setTransform(1, 0, 0, 1, 0, 0);
   pctx.fillStyle = "#fff"; pctx.fillRect(0, 0, pc.width, pc.height);
@@ -860,19 +1245,16 @@ function dab(x, y) {
   pctx.globalAlpha = 1;
 }
 let last = null;
+function pt(e) { const b = pc.getBoundingClientRect(); return { x: e.clientX - b.left, y: e.clientY - b.top }; }
 pc.addEventListener("pointerdown", e => { pc.setPointerCapture(e.pointerId); const p = pt(e); last = p; dab(p.x, p.y); });
 pc.addEventListener("pointermove", e => {
   if (!last) return;
-  const p = pt(e);
-  const dist = Math.hypot(p.x - last.x, p.y - last.y);
-  const stepLen = Math.max(2, paint.size * 0.3);
+  const p = pt(e), dist = Math.hypot(p.x - last.x, p.y - last.y), stepLen = Math.max(2, paint.size * 0.3);
   if (dist < stepLen) return;
   for (let t = stepLen; t <= dist; t += stepLen) dab(last.x + (p.x - last.x) * t / dist, last.y + (p.y - last.y) * t / dist);
   last = p;
 });
 ["pointerup", "pointercancel", "pointerleave"].forEach(ev => pc.addEventListener(ev, () => { last = null; }));
-function pt(e) { const b = pc.getBoundingClientRect(); return { x: e.clientX - b.left, y: e.clientY - b.top }; }
-
 const sw = document.getElementById("swatches");
 PAINTS.forEach(([name, token], i) => {
   const b = document.createElement("button");
@@ -896,32 +1278,58 @@ document.getElementById("clearPaint").onclick = () => {
   pctx.save(); pctx.setTransform(1, 0, 0, 1, 0, 0); pctx.fillStyle = "#fff"; pctx.fillRect(0, 0, pc.width, pc.height); pctx.restore();
   seedPainting();
 };
-/* a small starter painting so the page opens with colour on it */
 function seedPainting() {
   const w = pc.clientWidth, h = pc.clientHeight, keep = { ...paint };
   const strokes = [["--cerulean", 26, .08, .32, .92, .28], ["--gamboge", 26, .72, .18, .82, .18], ["--sap", 26, .06, .82, .94, .78], ["--rose", 9, .4, .6, .6, .6]];
   for (const [tok, size, x0, y0, x1, y1] of strokes) {
     paint.color = css(tok); paint.size = size;
-    const steps = 40;
-    for (let s = 0; s <= steps; s++) {
-      const t = s / steps;
-      dab((x0 + (x1 - x0) * t) * w, (y0 + (y1 - y0) * t + Math.sin(t * 6) * 0.03) * h);
-    }
+    for (let s = 0; s <= 40; s++) { const t = s / 40; dab((x0 + (x1 - x0) * t) * w, (y0 + (y1 - y0) * t + Math.sin(t * 6) * 0.03) * h); }
   }
   paint = keep;
 }
 
+/* ---------- passport gate ---------- */
+const gate = document.getElementById("gate");
+function closeGate() {
+  gate.classList.add("gone");
+  document.documentElement.classList.remove("locked");
+  document.getElementById("hud").hidden = false;
+  paintGlobe(false);
+  setTimeout(() => { gate.hidden = true; }, 900);
+}
+document.getElementById("ppCover").addEventListener("click", () => {
+  document.getElementById("passport").classList.add("open");
+  document.getElementById("ppPage").inert = false;
+  document.getElementById("gateHint").textContent = "Happy birthday, Mum. Ready to board?";
+  setTimeout(() => document.getElementById("startJourney").focus({ preventScroll: true }), reduceMotion ? 0 : 900);
+});
+document.getElementById("startJourney").addEventListener("click", closeGate);
+document.getElementById("skipGate").addEventListener("click", closeGate);
+
+/* globe */
+document.getElementById("globe").addEventListener("click", () => { globeSeed = (globeSeed * 31 + 7) % 9973; paintGlobe(false); });
+
 /* ---------- boot ---------- */
 build();
+progress.stamps.forEach(id => applyStamp(id, false));
+document.querySelectorAll(".spot").forEach(sp => { if (progress.hamdy.includes(sp.dataset.hamdy)) showHamdy(sp, false); });
+updateHud(false);
+wirePhotos();
 countdown(); setInterval(countdown, 30000);
 sizePaintCanvas(); seedPainting();
-paintAll(true);
+paintCover();
+paintGlobe(true);
+paintStops(true);
+document.documentElement.classList.add("locked");
+
 let lastW = window.innerWidth, rt;
 window.addEventListener("resize", () => {
   clearTimeout(rt);
   rt = setTimeout(() => {
     if (Math.abs(window.innerWidth - lastW) < 40) return;
-    lastW = window.innerWidth; paintAll(false); sizePaintCanvas();
+    lastW = window.innerWidth;
+    paintCover(); paintGlobe(true); paintStops(false); sizePaintCanvas();
+    document.querySelectorAll(".print[data-ready]").forEach(f => makeSketch(f));
   }, 200);
 });
 </script>
