@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mum's Painted Passport</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Ccircle%20cx%3D%2214%22%20cy%3D%2214%22%20r%3D%2211%22%20fill%3D%22%23dcc7a3%22%20stroke%3D%22%23262b40%22%20stroke-width%3D%223%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2214%22%20r%3D%2211%22%20fill%3D%22%23dcc7a3%22%20stroke%3D%22%23262b40%22%20stroke-width%3D%223%22/%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2236%22%20r%3D%2225%22%20fill%3D%22%23dcc7a3%22%20stroke%3D%22%23262b40%22%20stroke-width%3D%223%22/%3E%3Crect%20x%3D%2211%22%20y%3D%2226%22%20width%3D%2219%22%20height%3D%2213%22%20rx%3D%224%22%20fill%3D%22%231b2030%22/%3E%3Crect%20x%3D%2234%22%20y%3D%2226%22%20width%3D%2219%22%20height%3D%2213%22%20rx%3D%224%22%20fill%3D%22%231b2030%22/%3E%3Cpath%20d%3D%22M30%2031h4%22%20stroke%3D%22%231b2030%22%20stroke-width%3D%223%22/%3E%3Cellipse%20cx%3D%2232%22%20cy%3D%2247%22%20rx%3D%224.5%22%20ry%3D%223.2%22%20fill%3D%22%235a3e28%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Kalam:wght@300;400;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -36,6 +37,7 @@
   --foil: #efd38c;         /* gold foil */
   --fur: #dcc7a3;          /* Hamdy */
   --fur-dark: #b89c74;
+  --fur-light: #efe3cc;
   --lens: #1b2030;
   --board: #1c2130;        /* departures board */
   --board-cell: #2b3145;
@@ -361,7 +363,7 @@ button { font: inherit; color: inherit; }
   background: #fff;
   box-shadow: 0 1px 2px rgba(38, 43, 64, .12), 0 14px 30px -18px rgba(38, 43, 64, .45);
   transform: rotate(var(--tilt, 0deg));
-  transition: transform .4s cubic-bezier(.3, 1.4, .5, 1), box-shadow .4s;
+  transition: transform .4s cubic-bezier(.3, 1.4, .5, 1), box-shadow .4s, translate .8s cubic-bezier(.2, 1.3, .4, 1), opacity .6s ease;
   break-inside: avoid;
 }
 .print::before {
@@ -371,11 +373,11 @@ button { font: inherit; color: inherit; }
   clip-path: polygon(0 8%, 4% 0, 8% 10%, 12% 0, 100% 4%, 96% 14%, 100% 26%, 97% 40%, 100% 55%, 96% 70%, 100% 86%, 95% 100%, 0 96%, 4% 82%, 0 68%, 3% 52%, 0 38%, 4% 22%);
 }
 .print:hover { transform: rotate(0deg) translateY(-4px); }
-.media { position: relative; display: block; width: 100%; padding: 0; border: 0; background: var(--paper-shade); cursor: pointer; }
-.media img { display: block; width: 100%; height: auto; max-width: 100%; transition: filter 1.2s ease; }
-.print:not(.revealed) .media img { filter: grayscale(1) contrast(.75) brightness(1.18) sepia(.12); }
-.media canvas.sketch { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity .7s ease; }
-.print.revealed canvas.sketch { opacity: 0; pointer-events: none; }
+.media { position: relative; display: block; width: 100%; padding: 0; border: 0; background: var(--paper-shade); cursor: pointer; overflow: hidden; }
+.media img { display: block; width: 100%; height: auto; max-width: 100%; }
+.media img.bw { filter: grayscale(1) contrast(1.05); }
+.media img.col { position: absolute; inset: 0; height: 100%; object-fit: cover; clip-path: circle(0% at var(--x, 50%) var(--y, 50%)); transition: clip-path 1.2s cubic-bezier(.3, .6, .25, 1); }
+.print.revealed .media img.col { clip-path: circle(150% at var(--x, 50%) var(--y, 50%)); }
 .media .hint {
   position: absolute; left: 10px; bottom: 10px; z-index: 1;
   font-family: var(--hand); font-size: .95rem; line-height: 1.2;
@@ -505,6 +507,84 @@ dialog#lightbox::backdrop { background: rgba(38, 43, 64, .8); }
 .lb-bar p { font-family: var(--hand); font-size: 1.15rem; min-width: 0; flex: 1 1 14rem; }
 .lb-nav { display: flex; gap: 8px; flex: none; }
 
+/* ---------- Hamdy says hello ---------- */
+.welcome {
+  position: fixed; inset: 0; z-index: 65; display: grid; place-items: center; align-content: safe center; overflow-y: auto;
+  background-color: var(--paper); background-image: var(--grain);
+  padding: max(20px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(20px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  transition: opacity .7s ease, visibility .7s;
+}
+.welcome.gone { opacity: 0; visibility: hidden; }
+.welcome-inner { display: grid; justify-items: center; gap: 22px; text-align: center; }
+.bubble-big {
+  position: relative; background: #fff; border: 2px solid var(--ink); border-radius: 22px;
+  padding: 16px 24px; width: min(460px, 88vw); min-height: 4.4em; box-shadow: 4px 4px 0 var(--line);
+  font-family: var(--hand); font-size: clamp(1.2rem, 3.6vw, 1.6rem); line-height: 1.35; display: grid; place-items: center;
+}
+.bubble-big::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -12px; border: 12px solid transparent; border-top-color: var(--ink); }
+.big-hamdy-wrap { position: relative; width: min(290px, 62vw); aspect-ratio: 240 / 290; max-width: 100%; animation: popIn 1s cubic-bezier(.2, 1.5, .4, 1) both; }
+.big-hamdy-wrap .wash { inset: -20%; width: 140%; height: 140%; -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent 100%); mask-image: radial-gradient(closest-side, #000 55%, transparent 100%); }
+.big-hamdy { position: relative; z-index: 1; display: block; width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: pointer; }
+.big-hamdy svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.big-hamdy.jump { animation: jump .6s cubic-bezier(.3, 1.5, .5, 1); }
+.big-hamdy.leave { animation: leave .9s cubic-bezier(.5, -.4, .7, .2) forwards; }
+@keyframes popIn { 0% { transform: translateY(50%) scale(.5); opacity: 0; } 100% { transform: none; opacity: 1; } }
+@keyframes jump { 40% { transform: translateY(-14%) rotate(-5deg); } }
+@keyframes leave { to { transform: translateY(-140vh) rotate(14deg); } }
+.hb-arm { transform-box: fill-box; transform-origin: 15% 95%; animation: hbwave .8s ease-in-out infinite alternate; }
+@keyframes hbwave { from { transform: rotate(-20deg); } to { transform: rotate(24deg); } }
+.hb-glasses { animation: peek 6s ease-in-out 2s infinite; }
+@keyframes peek { 0%, 70%, 100% { transform: translateY(0); } 76%, 90% { transform: translateY(22px); } }
+.hb-bob { transform-box: fill-box; transform-origin: 50% 100%; animation: bob 2.4s ease-in-out infinite; }
+@keyframes bob { 50% { transform: scaleY(.97); } }
+.btn.big { font-size: 1.4rem; padding: 14px 30px; box-shadow: 4px 4px 0 var(--ink); }
+
+/* Hamdy dancing by the cake */
+.party-hamdy { position: absolute; right: 4%; bottom: 0; width: 32%; z-index: 2; transform: scale(0); transform-origin: 50% 100%; transition: transform .6s cubic-bezier(.2, 1.6, .4, 1); pointer-events: none; }
+.party-hamdy svg { display: block; width: 100%; height: auto; overflow: visible; }
+.out .party-hamdy { transform: none; }
+.out .party-hamdy svg { animation: dance .42s ease-in-out infinite alternate; transform-origin: 50% 100%; }
+@keyframes dance { from { transform: rotate(-7deg); } to { transform: rotate(7deg) translateY(-5%); } }
+
+/* confetti */
+.confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 80; }
+
+/* memory game */
+.memory { padding-block: 48px 24px; }
+.memory h2 { font-size: var(--step-2); font-style: italic; font-variation-settings: "SOFT" 100, "opsz" 72; margin-top: 6px; }
+.memory .intro { font-family: var(--hand); font-size: var(--step-1); margin-top: 8px; max-width: 52ch; }
+.mem-bar { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; margin-top: 16px; }
+.mem-stat { font-family: var(--mono); font-size: .9rem; letter-spacing: .08em; text-transform: uppercase; }
+.mem-stat b { font-weight: 500; font-variant-numeric: tabular-nums; }
+.mem-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 18px; max-width: 620px; }
+.card { aspect-ratio: 1; max-width: 100%; padding: 0; border: 0; background: none; cursor: pointer; perspective: 800px; }
+.card-inner { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .55s cubic-bezier(.3, 1.3, .5, 1); }
+.card.flipped .card-inner, .card.matched .card-inner { transform: rotateY(180deg); }
+.face { position: absolute; inset: 0; border-radius: 10px; -webkit-backface-visibility: hidden; backface-visibility: hidden; overflow: hidden; border: 2px solid var(--ink); }
+.face.back { background: var(--cover); color: var(--foil); display: grid; place-items: center; }
+.face.back svg { width: 48%; height: 48%; }
+.face.front { transform: rotateY(180deg); background: #fff; padding: 5px; }
+.face.front img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+.card.matched .face.front { box-shadow: inset 0 0 0 4px var(--gamboge); }
+.mem-msg { font-family: var(--hand); font-size: var(--step-1); margin-top: 14px; min-height: 1.5em; }
+
+/* sound toggle */
+.hud-sound { display: inline-flex; align-items: center; padding: 4px 8px; border: 0; background: none; border-radius: 999px; cursor: pointer; }
+.hud-sound:hover { background: var(--paper-shade); }
+.hud-sound .s-off { display: none; }
+.hud-sound.muted .s-on { display: none; }
+.hud-sound.muted .s-off { display: inline; }
+
+/* things arriving as she scrolls */
+.js-anim .print:not(.in) { opacity: 0; translate: 0 50px; }
+.stop-head .panel-col { transition: opacity .7s ease, translate .9s cubic-bezier(.2, 1.2, .4, 1); }
+.js-anim .stop-head:not(.in) .panel-col { opacity: 0; translate: 40px 0; }
+
+@media (max-width: 560px) { .mem-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; } }
+@media (prefers-reduced-motion: reduce) {
+  .big-hamdy-wrap, .hb-arm, .hb-glasses, .hb-bob, .out .party-hamdy svg { animation: none; }
+}
+
 /* responsive */
 @media (max-width: 760px) {
   .hero-grid { grid-template-columns: minmax(0, 1fr); }
@@ -562,6 +642,18 @@ dialog#lightbox::backdrop { background: rgba(38, 43, 64, .8); }
     </symbol>
   </defs>
 </svg>
+
+<!-- Hamdy says hello -->
+<div class="welcome" id="welcome" role="dialog" aria-modal="true" aria-label="Hamdy says hello">
+  <div class="welcome-inner">
+    <div class="bubble-big"><p id="hiText" aria-live="polite">Hi Mum!</p></div>
+    <div class="big-hamdy-wrap">
+      <canvas class="wash" id="hiWash" aria-hidden="true"></canvas>
+      <button class="big-hamdy" id="bigHamdy" type="button" aria-label="Hamdy the bear. Tap him to hear more."></button>
+    </div>
+    <button class="btn big" id="hiGo" type="button">Hi Hamdy! Let's fly</button>
+  </div>
+</div>
 
 <!-- Departure gate: the opening moment -->
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-label="Departure gate for flight MUM55">
@@ -672,12 +764,27 @@ dialog#lightbox::backdrop { background: rgba(38, 43, 64, .8); }
     <div class="wrap">
       <p class="eyebrow">Itinerary</p>
       <h2 id="itin-title">Four stops, painted in order</h2>
-      <p class="how">At every stop: stamp your passport, tap the pencil sketches to paint them into colour, and look out for Hamdy. He's hiding somewhere in each country.</p>
+      <p class="how">At every stop: stamp your passport, tap the black-and-white photos to bring them back to colour, and look out for Hamdy. He's hiding somewhere in each country.</p>
       <ol class="stops-list" id="stopsList"></ol>
     </div>
   </section>
 
   <div id="stops"></div>
+
+  <section class="memory" id="memory" aria-labelledby="mem-title">
+    <div class="wrap">
+      <p class="eyebrow">Memory lane</p>
+      <h2 id="mem-title">Match the moments</h2>
+      <p class="intro">Flip two cards at a time and find every matching pair of memories.</p>
+      <div class="mem-bar">
+        <span class="mem-stat">Moves <b id="memMoves">0</b></span>
+        <span class="mem-stat">Pairs <b id="memPairs">0</b>/6</span>
+        <button class="btn small" id="memReset" type="button">Shuffle again</button>
+      </div>
+      <div class="mem-grid" id="memGrid"></div>
+      <p class="mem-msg" id="memMsg" aria-live="polite"></p>
+    </div>
+  </section>
 
   <section class="finale" id="birthday" aria-labelledby="letter-title">
     <div class="wrap finale-grid">
@@ -711,6 +818,7 @@ dialog#lightbox::backdrop { background: rgba(38, 43, 64, .8); }
             <path class="smoke" d="M100 88c-6-8 6-14 0-22s6-14 0-20"/>
             <path class="smoke" d="M222 88c-6-8 6-14 0-22s6-14 0-20"/>
           </svg>
+          <div class="party-hamdy" id="partyHamdy" aria-hidden="true"></div>
         </div>
         <button class="btn" id="blowBtn" type="button">Make a wish and blow</button>
         <p class="wish-msg" id="wishMsg" aria-live="polite"></p>
@@ -733,7 +841,7 @@ dialog#lightbox::backdrop { background: rgba(38, 43, 64, .8); }
     <div class="wrap">
       <p class="eyebrow">Your page</p>
       <h2 id="sketch-title">Now it's your turn to paint</h2>
-      <p class="intro">A fresh sheet of cold-press, six pigments and two brushes. Paint over the same spot to deepen the colour, the way real washes build up.</p>
+      <p class="intro">A clean white sheet, six pigments and two brushes. Paint over the same spot to deepen the colour, the way real washes build up.</p>
       <div class="easel">
         <div class="toolbar">
           <div class="swatches" id="swatches" role="group" aria-label="Pigments"></div>
@@ -764,8 +872,13 @@ dialog#lightbox::backdrop { background: rgba(38, 43, 64, .8); }
     <svg viewBox="0 0 60 64" aria-hidden="true"><use href="#hamdy-art"/></svg>
     <span><b id="hudHamdy">0</b>/4 Hamdys</span>
   </a>
+  <span class="sep" aria-hidden="true"></span>
+  <button class="hud-sound" id="soundToggle" type="button" aria-label="Sound on. Tap to mute">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h3l5-4v14l-5-4H4z" fill="var(--gamboge)" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round"/><g class="s-on" fill="none" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"><path d="M15.5 9a4 4 0 0 1 0 6"/><path d="M18 6.5a7.5 7.5 0 0 1 0 11"/></g><g class="s-off" stroke="var(--ink)" stroke-width="1.8" stroke-linecap="round"><path d="M16 9l5 6M21 9l-5 6"/></g></svg>
+  </button>
 </nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
 
 <dialog id="lightbox" aria-label="Photo">
   <div class="lb-card">
@@ -841,15 +954,86 @@ const STOPS = [
     stampTop: "Misr · Home", stampBottom: "Always", stampMid: "EG",
     pigments: ["--turquoise", "--ochre", "--cerulean"],
     greet: { text: "كل سنة وانتي طيبة", lang: "ar", gloss: "Many happy returns", say: "say it: kol sana w enti tayba" },
-    note: "The trips are wonderful, but this is where every journey starts and ends. Family tables, long afternoons, and you at the centre of all of it.",
+    note: "The trips are wonderful, but home is where every journey starts and ends: windswept afternoons at the Pyramids, long family lunches in the sun, evenings out with your boys, and you at the centre of all of it.",
     hamdy: { spot: "leg", line: "Ahlan! Hamdy is home." },
-    photos: []
+    photos: [
+      { src: "photos/egypt/pyramids.jpg", w: 1050, h: 1400, caption: "The Pyramids of Giza, with the wind doing everyone's hair." },
+      { src: "photos/egypt/family-lunch.jpg", w: 1400, h: 1050, caption: "A long family lunch in the sunshine, everyone around one table." },
+      { src: "photos/egypt/the-lighthouse.jpg", w: 1050, h: 1400, caption: "At The Lighthouse, under a waterfall of bougainvillea." },
+      { src: "photos/egypt/dressed-up.jpg", w: 1050, h: 1400, caption: "All dressed up in red, with your two biggest fans beside you." },
+      { src: "photos/egypt/night-out.jpg", w: 1400, h: 1050, caption: "A night out with your boys, lights everywhere." }
+    ]
   }
 ];
 
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+/* ---------- sound (made in the browser, starts only after a tap) ---------- */
+let AC = null, soundOn = true;
+try { soundOn = localStorage.getItem("mum55-sound") !== "off"; } catch (e) {}
+function ac(force) {
+  if (!soundOn && !force) return null;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    if (AC.state === "suspended") AC.resume();
+    return AC;
+  } catch (e) { return null; }
+}
+function tone(a, f, start, dur, vol, type) {
+  const o = a.createOscillator(), g = a.createGain(), t = a.currentTime + start;
+  o.type = type || "sine"; o.frequency.value = f;
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .015); g.gain.exponentialRampToValueAtTime(.0008, t + dur);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + dur + .05);
+}
+function noise(a, dur) {
+  const b = a.createBuffer(1, Math.floor(a.sampleRate * dur), a.sampleRate), d = b.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  const src = a.createBufferSource(); src.buffer = b; return src;
+}
+const sfx = {
+  chime(force) { const a = ac(force); if (!a) return; [392, 523.25, 659.25].forEach((f, i) => tone(a, f, .05 + i * .45, 1.5, .22)); },
+  whoosh() {
+    const a = ac(); if (!a) return;
+    const t = a.currentTime;
+    const s = noise(a, 2.6), bp = a.createBiquadFilter(), g = a.createGain();
+    bp.type = "bandpass"; bp.Q.value = 1.1;
+    bp.frequency.setValueAtTime(220, t); bp.frequency.exponentialRampToValueAtTime(2800, t + 1.15); bp.frequency.exponentialRampToValueAtTime(380, t + 2.5);
+    g.gain.setValueAtTime(.001, t); g.gain.exponentialRampToValueAtTime(.75, t + 1); g.gain.exponentialRampToValueAtTime(.001, t + 2.5);
+    s.connect(bp); bp.connect(g); g.connect(a.destination); s.start(t); s.stop(t + 2.6);
+    const r = noise(a, 2.6), lp = a.createBiquadFilter(), rg = a.createGain();
+    lp.type = "lowpass"; lp.frequency.value = 150;
+    rg.gain.setValueAtTime(.001, t); rg.gain.exponentialRampToValueAtTime(1, t + .6); rg.gain.exponentialRampToValueAtTime(.001, t + 2.4);
+    r.connect(lp); lp.connect(rg); rg.connect(a.destination); r.start(t); r.stop(t + 2.6);
+  },
+  thunk() {
+    const a = ac(); if (!a) return;
+    const t = a.currentTime, s = noise(a, .3), lp = a.createBiquadFilter(), g = a.createGain();
+    lp.type = "lowpass"; lp.frequency.value = 700;
+    g.gain.setValueAtTime(1, t); g.gain.exponentialRampToValueAtTime(.001, t + .25);
+    s.connect(lp); lp.connect(g); g.connect(a.destination); s.start(t);
+    tone(a, 105, 0, .2, .35, "triangle");
+  },
+  boing() {
+    const a = ac(); if (!a) return;
+    const t = a.currentTime, o = a.createOscillator(), g = a.createGain();
+    o.frequency.setValueAtTime(220, t); o.frequency.exponentialRampToValueAtTime(880, t + .12); o.frequency.exponentialRampToValueAtTime(330, t + .35);
+    g.gain.setValueAtTime(.22, t); g.gain.exponentialRampToValueAtTime(.001, t + .42);
+    o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + .45);
+  },
+  sparkle() { const a = ac(); if (!a) return; [1318.5, 1568, 2093].forEach((f, i) => tone(a, f, i * .06, .4, .06, "triangle")); },
+  pop() { const a = ac(); if (!a) return; tone(a, 660, 0, .12, .14, "triangle"); tone(a, 990, .05, .15, .08); },
+  win() { const a = ac(); if (!a) return; [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => tone(a, f, i * .12, .6, .14, "triangle")); },
+  birthday() {
+    const a = ac(); if (!a) return;
+    const N = { G4: 392, A4: 440, B4: 493.88, C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99 };
+    const song = [["G4", .75], ["G4", .25], ["A4", 1], ["G4", 1], ["C5", 1], ["B4", 2], ["G4", .75], ["G4", .25], ["A4", 1], ["G4", 1], ["D5", 1], ["C5", 2],
+      ["G4", .75], ["G4", .25], ["G5", 1], ["E5", 1], ["C5", 1], ["B4", 1], ["A4", 2], ["F5", .75], ["F5", .25], ["E5", 1], ["C5", 1], ["D5", 1], ["C5", 3]];
+    let t = .15; const beat = .38;
+    song.forEach(([n, d]) => { const f = N[n] * 2; tone(a, f, t, 1.5, .12); tone(a, f * 2, t, .5, .03); t += d * beat; });
+  }
+};
 
 /* ---------- progress (kept on this device) ---------- */
 const KEY = "mum55-journey";
@@ -1011,10 +1195,10 @@ function build() {
         }
         const idx = allPhotos.push({ ...p }) - 1;
         prints += `<figure class="print" data-idx="${idx}" style="--tilt:${t.toFixed(1)}deg;--tape:${(k % 2 ? 4 : -3)}deg;--tape-color:var(${tapes[(k + i) % tapes.length]})">
-          <button class="media" type="button" aria-label="Paint this sketch into colour: ${esc(p.caption)}">
-            <img src="${esc(p.src)}" width="${p.w}" height="${p.h}" alt="${esc(p.caption)}" loading="lazy" decoding="async">
-            <canvas class="sketch" aria-hidden="true"></canvas>
-            <span class="hint" aria-hidden="true">${brushSVG}Tap to paint</span>
+          <button class="media" type="button" aria-label="Bring this photo to colour: ${esc(p.caption)}">
+            <img class="bw" src="${esc(p.src)}" width="${p.w}" height="${p.h}" alt="${esc(p.caption)}" loading="lazy" decoding="async">
+            <img class="col" src="${esc(p.src)}" width="${p.w}" height="${p.h}" alt="" aria-hidden="true" loading="lazy" decoding="async">
+            <span class="hint" aria-hidden="true">${brushSVG}Tap for colour</span>
           </button>
           <figcaption>${esc(p.caption)}</figcaption>
         </figure>`;
@@ -1052,7 +1236,7 @@ function build() {
               <button class="btn stamp-btn" type="button" data-stamp="${s.id}">Stamp my passport</button>
             </div>
           </div>
-          ${s.photos.length ? `<div class="prints-bar"><p>Tap a sketch to paint it into colour.</p><button class="btn small" type="button" data-paint-all="${s.id}">Paint them all</button></div>` : ""}
+          ${s.photos.length ? `<div class="prints-bar"><p>Tap a photo to bring it back to colour.</p><button class="btn small" type="button" data-paint-all="${s.id}">Colour them all</button></div>` : ""}
           <div class="prints-wrap">
             ${spot === "prints" ? hamdySpot(s) : ""}
             <div class="prints">${prints}</div>
@@ -1068,7 +1252,7 @@ function build() {
       <div class="leg wrap" style="--leg-color:var(${legColor})">
         <svg class="route-line" viewBox="0 0 420 90" aria-hidden="true">
           <path class="path" d="M20 70 C 120 ${45 - flip * 35}, 300 ${45 + flip * 35}, 390 24"/>
-          <g transform="translate(390 24) rotate(-28)"><path class="plane" d="M-14 -8 L14 0 L-14 8 L-8 0 Z"/></g>
+          <g class="plane-g" transform="translate(390 24) rotate(-28)"><path class="plane" d="M-14 -8 L14 0 L-14 8 L-8 0 Z"/></g>
         </svg>
         <span class="eyebrow">${esc(s.name)} → ${next ? esc(next.name) : "Home"}</span>
         <p>${legText}</p>
@@ -1149,11 +1333,12 @@ document.addEventListener("click", e => {
   if (progress.stamps.includes(id)) return;
   progress.stamps.push(id); save();
   applyStamp(id, true);
+  ac(); setTimeout(() => sfx.thunk(), 220);
   const s = STOPS.find(x => x.id === id);
   const panel = b.closest(".panel-col").querySelector(".panel .wash");
   setTimeout(() => splash(panel, 9, s.pigments.map(css), id.length * 31), reduceMotion ? 0 : 300);
   updateHud(true);
-  if (progress.stamps.length === STOPS.length) toast("Every stamp collected! Your passport is full. Head home for cake.");
+  if (progress.stamps.length === STOPS.length) { toast("Every stamp collected! Your passport is full. Head home for cake."); confetti(110); setTimeout(() => sfx.win(), 400); }
   else toast(`${s.name} stamped. ${STOPS.length - progress.stamps.length} to go.`);
 });
 
@@ -1173,6 +1358,7 @@ document.addEventListener("click", e => {
   if (progress.hamdy.includes(id)) { const bub = spot.querySelector(".bubble"); bub.hidden = !bub.hidden; return; }
   progress.hamdy.push(id); save();
   showHamdy(spot, true);
+  sfx.boing();
   updateHud(true);
   const left = STOPS.length - progress.hamdy.length;
   toast(left ? `You found Hamdy! ${left} more hiding spot${left > 1 ? "s" : ""} to go.` : "You found every Hamdy! He says: happy birthday, travel buddy.");
@@ -1181,101 +1367,36 @@ document.addEventListener("click", e => {
 /* ---------- greeting tags swing ---------- */
 document.addEventListener("click", e => {
   const t = e.target.closest(".tag");
-  if (!t || reduceMotion) return;
+  if (!t) return;
+  sfx.pop();
+  if (reduceMotion) return;
   t.classList.remove("swing"); void t.offsetWidth; t.classList.add("swing");
 });
 
-/* ---------- photos: pencil sketch → watercolour ---------- */
-function makeSketch(fig) {
-  const img = fig.querySelector("img");
-  const cv = fig.querySelector("canvas.sketch");
-  const draw = () => {
-    if (fig.classList.contains("revealed")) return;
-    const w = img.clientWidth, h = img.clientHeight;
-    if (!w || !h) return;
-    const scale = Math.min(window.devicePixelRatio || 1, 1.5);
-    const W = Math.round(w * scale), H = Math.round(h * scale);
-    cv.width = W; cv.height = H;
-    const c = cv.getContext("2d", { willReadFrequently: true });
-    c.drawImage(img, 0, 0, W, H);
-    let d;
-    try { d = c.getImageData(0, 0, W, H); } catch (err) { cv.remove(); return; }
-    const p = d.data, L = new Float32Array(W * H);
-    for (let i = 0, j = 0; i < p.length; i += 4, j++) L[j] = .3 * p[i] + .59 * p[i + 1] + .11 * p[i + 2];
-    for (let y = 0; y < H; y++) {
-      for (let x = 0; x < W; x++) {
-        const j = y * W + x, l = L[j];
-        const gx = x < W - 1 ? Math.abs(L[j + 1] - l) : 0;
-        const gy = y < H - 1 ? Math.abs(L[j + W] - l) : 0;
-        let v = 247 - (255 - l) * .5 - (gx + gy) * 1.6;
-        v = v < 40 ? 40 : v;
-        const o = j * 4;
-        p[o] = v + 3; p[o + 1] = v; p[o + 2] = v - 7; p[o + 3] = 255;
-      }
-    }
-    c.putImageData(d, 0, 0);
-    fig.dataset.ready = "1";
-  };
-  if (img.complete && img.naturalWidth) draw(); else img.addEventListener("load", draw, { once: true });
-}
-function revealBloom(fig, px, py) {
-  if (fig.classList.contains("revealed") || fig.classList.contains("revealing")) return;
-  const cv = fig.querySelector("canvas.sketch");
-  fig.classList.add("revealing");
-  const done = () => { fig.classList.remove("revealing"); fig.classList.add("revealed"); fig.querySelector(".media").setAttribute("aria-label", "Open photo: " + allPhotos[+fig.dataset.idx].caption); };
-  if (!cv || !fig.dataset.ready || reduceMotion) { done(); return; }
-  const c = cv.getContext("2d");
-  const W = cv.width, H = cv.height, k = W / cv.clientWidth;
-  const x0 = (px ?? cv.clientWidth / 2) * k, y0 = (py ?? cv.clientHeight / 2) * k;
-  const maxR = Math.hypot(Math.max(x0, W - x0), Math.max(y0, H - y0));
-  const r = rng((x0 * 7 + y0) | 0);
-  c.globalCompositeOperation = "destination-out";
-  const t0 = performance.now(), dur = 1300;
-  const frame = now => {
-    const t = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - t, 2.4);
-    const rad = maxR * e * 1.05 + 10;
-    for (let i = 0; i < 3; i++) {
-      c.globalAlpha = .28;
-      const jx = gauss(r) * rad * .18, jy = gauss(r) * rad * .18;
-      fillPoly(c, deform(basePoly(x0 + jx, y0 + jy, rad * (.55 + r() * .4), r, 9, 1, 1), 2, .3, r));
-    }
-    if (t < 1) requestAnimationFrame(frame); else done();
-  };
-  requestAnimationFrame(frame);
-}
-function brushReveal(fig, x, y) {
-  const cv = fig.querySelector("canvas.sketch");
-  if (!cv || !fig.dataset.ready || fig.classList.contains("revealed") || fig.classList.contains("revealing")) return;
-  const c = cv.getContext("2d"), k = cv.width / cv.clientWidth;
-  const r = rng(((x * 13) ^ (y * 7)) | 0);
-  c.globalCompositeOperation = "destination-out"; c.globalAlpha = .16;
-  fillPoly(c, deform(basePoly(x * k, y * k, 26 * k, r, 7, 1, 1), 2, .35, r));
-  fig.dataset.dabs = (+fig.dataset.dabs || 0) + 1;
-  if (+fig.dataset.dabs > 70) revealBloom(fig, x, y);
+/* ---------- photos: black and white, colour spreads from her tap ---------- */
+function revealPhoto(fig, x, y, quiet) {
+  if (fig.classList.contains("revealed")) return;
+  const m = fig.querySelector(".media");
+  if (x != null) { m.style.setProperty("--x", x + "px"); m.style.setProperty("--y", y + "px"); }
+  fig.classList.add("revealed");
+  m.setAttribute("aria-label", "Open photo: " + allPhotos[+fig.dataset.idx].caption);
+  if (!quiet) sfx.sparkle();
 }
 function wirePhotos() {
-  const figs = document.querySelectorAll(".print[data-idx]");
-  const io = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { io.unobserve(en.target); makeSketch(en.target); } }), { rootMargin: "300px" }) : null;
-  figs.forEach(fig => {
-    if (io) io.observe(fig); else makeSketch(fig);
+  document.querySelectorAll(".print[data-idx]").forEach(fig => {
     const media = fig.querySelector(".media");
     media.addEventListener("click", e => {
       if (fig.classList.contains("revealed")) { openLightbox(+fig.dataset.idx); return; }
       const b = media.getBoundingClientRect();
-      const x = e.clientX ? e.clientX - b.left : b.width / 2, y = e.clientY ? e.clientY - b.top : b.height / 2;
-      revealBloom(fig, x, y);
-    });
-    if (finePointer) media.addEventListener("pointermove", e => {
-      const b = media.getBoundingClientRect();
-      brushReveal(fig, e.clientX - b.left, e.clientY - b.top);
+      revealPhoto(fig, e.clientX ? e.clientX - b.left : b.width / 2, e.clientY ? e.clientY - b.top : b.height / 2);
     });
   });
   document.addEventListener("click", e => {
     const b = e.target.closest("[data-paint-all]");
     if (!b) return;
-    const sec = document.getElementById(b.dataset.paintAll);
-    sec.querySelectorAll(".print[data-idx]").forEach((fig, i) => setTimeout(() => { if (!fig.dataset.ready) makeSketch(fig); revealBloom(fig); }, reduceMotion ? 0 : i * 180));
-    b.disabled = true; b.textContent = "All painted";
+    sfx.sparkle();
+    document.getElementById(b.dataset.paintAll).querySelectorAll(".print[data-idx]").forEach((fig, i) => setTimeout(() => revealPhoto(fig, null, null, true), reduceMotion ? 0 : i * 160));
+    b.disabled = true; b.textContent = "All in colour";
   });
 }
 
@@ -1314,6 +1435,7 @@ document.getElementById("blowBtn").addEventListener("click", function () {
   wrap.classList.add("out");
   this.textContent = "Light them again";
   msg.textContent = "Wish made. Happy 55th birthday, Mum!";
+  sfx.birthday(); confetti(170);
   splash(document.getElementById("cakeWash"), 26, ["--rose", "--gamboge", "--cerulean", "--turquoise", "--vermilion", "--sap"].map(css), Date.now() & 0xffff);
 });
 
@@ -1374,7 +1496,6 @@ document.querySelectorAll(".size-btn").forEach(b => b.addEventListener("click", 
 }));
 document.getElementById("clearPaint").onclick = () => {
   pctx.save(); pctx.setTransform(1, 0, 0, 1, 0, 0); pctx.fillStyle = "#fff"; pctx.fillRect(0, 0, pc.width, pc.height); pctx.restore();
-  seedPainting();
 };
 function seedPainting() {
   const w = pc.clientWidth, h = pc.clientHeight, keep = { ...paint };
@@ -1419,6 +1540,7 @@ function cellsFor(len) {
   return c;
 }
 let statusCells, nowRow;
+const boardJobs = [];
 (function buildBoard() {
   const host = document.getElementById("boardRows");
   BOARD.forEach((r, i) => {
@@ -1429,8 +1551,8 @@ let statusCells, nowRow;
     cols[2].classList.add("status");
     cols.forEach(c => row.appendChild(c));
     host.appendChild(row);
-    cols.forEach((c, k) => flapTo(c, r[k], 250 + i * 160));
-    if (i === BOARD.length - 1) { statusCells = cols[2]; nowRow = row; setTimeout(() => row.classList.add("blink"), reduceMotion ? 0 : 2400); }
+    boardJobs.push(() => cols.forEach((c, k) => flapTo(c, r[k], 250 + i * 160)));
+    if (i === BOARD.length - 1) { statusCells = cols[2]; nowRow = row; }
   });
   const clock = () => { const d = new Date(); document.getElementById("boardClock").textContent = String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); };
   clock(); setInterval(clock, 15000);
@@ -1452,23 +1574,14 @@ function typeAnnouncement(speed) {
   };
   step();
 }
-setTimeout(() => typeAnnouncement(26), 1100);
-
-let audioCtx = null, speaking = false;
-function chime() {
-  try {
-    const AC = window.AudioContext || window.webkitAudioContext;
-    audioCtx = audioCtx || new AC();
-    const t0 = audioCtx.currentTime + .05;
-    [392.0, 523.25, 659.25].forEach((f, i) => {
-      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-      o.type = "sine"; o.frequency.value = f;
-      const t = t0 + i * .45;
-      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.22, t + .02); g.gain.exponentialRampToValueAtTime(.001, t + 1.5);
-      o.connect(g); g.connect(audioCtx.destination); o.start(t); o.stop(t + 1.6);
-    });
-  } catch (e) {}
+function startGate() {
+  boardJobs.forEach(f => f());
+  setTimeout(() => nowRow.classList.add("blink"), reduceMotion ? 0 : 2400);
+  setTimeout(() => typeAnnouncement(26), 1100);
 }
+
+let speaking = false;
+function chime() { sfx.chime(true); }
 function setPlaying(on) {
   speaking = on;
   document.getElementById("pa").classList.toggle("playing", on);
@@ -1517,14 +1630,218 @@ document.getElementById("startJourney").addEventListener("click", function () {
   flapTo(statusCells, "DEPARTED", 0);
   nowRow.setAttribute("aria-label", "9 November, flight MUM55 to the world, departed");
   document.getElementById("gateHint").textContent = "Flight MUM55 has departed. Enjoy the journey!";
-  if (reduceMotion) { setTimeout(closeGate, 600); return; }
-  setTimeout(() => document.getElementById("takeoff").classList.add("go"), 700);
+  if (reduceMotion) { sfx.whoosh(); setTimeout(closeGate, 600); return; }
+  ac();
+  setTimeout(() => { document.getElementById("takeoff").classList.add("go"); sfx.whoosh(); }, 650);
   setTimeout(closeGate, 2200);
 });
 document.getElementById("skipGate").addEventListener("click", closeGate);
 
 /* globe */
-document.getElementById("globe").addEventListener("click", () => { globeSeed = (globeSeed * 31 + 7) % 9973; paintGlobe(false); });
+document.getElementById("globe").addEventListener("click", () => { globeSeed = (globeSeed * 31 + 7) % 9973; paintGlobe(false); sfx.sparkle(); });
+
+/* ---------- big Hamdy ---------- */
+function bigHamdySVG() {
+  const S = 'stroke="var(--ink)" stroke-width="3"';
+  return `<svg viewBox="0 0 240 290" aria-hidden="true">
+    <ellipse cx="120" cy="280" rx="76" ry="9" fill="var(--ink)" opacity=".12"/>
+    <g class="hb-bob">
+      <ellipse cx="86" cy="254" rx="28" ry="19" fill="var(--fur)" ${S}/>
+      <ellipse cx="154" cy="254" rx="28" ry="19" fill="var(--fur)" ${S}/>
+      <ellipse cx="86" cy="258" rx="13" ry="9" fill="var(--fur-dark)"/>
+      <ellipse cx="154" cy="258" rx="13" ry="9" fill="var(--fur-dark)"/>
+      <ellipse cx="120" cy="196" rx="70" ry="66" fill="var(--fur)" ${S}/>
+      <ellipse cx="120" cy="208" rx="40" ry="37" fill="var(--fur-light)"/>
+      <ellipse cx="54" cy="198" rx="17" ry="32" transform="rotate(18 54 198)" fill="var(--fur)" ${S}/>
+      <g class="hb-arm"><ellipse cx="192" cy="150" rx="17" ry="34" transform="rotate(-35 192 150)" fill="var(--fur)" ${S}/></g>
+      <path d="M150 160 l16 36 l-18 -5z" fill="var(--rose)" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M68 150 q52 26 104 0 l-3 18 q-49 24 -98 0z" fill="var(--rose)" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>
+      <circle cx="102" cy="216" r="15" fill="var(--gamboge)" stroke="var(--ink)" stroke-width="2"/>
+      <text x="102" y="221" font-family="IBM Plex Mono, monospace" font-size="13" font-weight="500" text-anchor="middle" fill="var(--ink)">55</text>
+      <circle cx="62" cy="54" r="27" fill="var(--fur)" ${S}/>
+      <circle cx="178" cy="54" r="27" fill="var(--fur)" ${S}/>
+      <circle cx="62" cy="54" r="13" fill="var(--fur-dark)"/>
+      <circle cx="178" cy="54" r="13" fill="var(--fur-dark)"/>
+      <circle cx="120" cy="100" r="68" fill="var(--fur)" ${S}/>
+      <circle cx="80" cy="128" r="10" fill="var(--rose)" opacity=".35"/>
+      <circle cx="160" cy="128" r="10" fill="var(--rose)" opacity=".35"/>
+      <ellipse cx="120" cy="130" rx="30" ry="22" fill="var(--fur-light)"/>
+      <circle cx="90" cy="92" r="6" fill="var(--ink)"/><circle cx="150" cy="92" r="6" fill="var(--ink)"/>
+      <circle cx="92" cy="90" r="2" fill="#fff"/><circle cx="152" cy="90" r="2" fill="#fff"/>
+      <ellipse cx="120" cy="120" rx="10" ry="7" fill="#5a3e28"/>
+      <path d="M106 134 q14 14 28 0" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+      <g class="hb-glasses">
+        <rect x="66" y="76" width="46" height="30" rx="10" fill="var(--lens)"/>
+        <rect x="128" y="76" width="46" height="30" rx="10" fill="var(--lens)"/>
+        <path d="M112 87h16M66 84l-10-4M174 84l10-4" stroke="var(--lens)" stroke-width="4" stroke-linecap="round"/>
+        <path d="M74 82h14M136 82h14" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".55"/>
+      </g>
+    </g>
+  </svg>`;
+}
+
+/* ---------- Hamdy says hello ---------- */
+const HI_LINES = [
+  "Hi Mum! It's me, Hamdy, your co-pilot. Happy 55th birthday!",
+  "I've packed my sunglasses. Ahmed and Omar packed everything else.",
+  "Today we fly to China, Italy, Germany, and home to Egypt.",
+  "Ready? Tap the big button and let's go!"
+];
+let hiIdx = 0, hiT, hiAuto;
+function sayHi(i) {
+  hiIdx = i; clearTimeout(hiT); clearTimeout(hiAuto);
+  const el = document.getElementById("hiText"), text = HI_LINES[i];
+  if (reduceMotion) { el.textContent = text; return; }
+  let n = 0;
+  const step = () => {
+    n++; el.textContent = text.slice(0, n);
+    if (n < text.length) hiT = setTimeout(step, 30);
+    else if (i < HI_LINES.length - 1) hiAuto = setTimeout(() => sayHi(i + 1), 2000);
+  };
+  step();
+}
+function initWelcome() {
+  const big = document.getElementById("bigHamdy");
+  big.innerHTML = bigHamdySVG();
+  document.getElementById("partyHamdy").innerHTML = bigHamdySVG();
+  paintWash(document.getElementById("hiWash"), [
+    { x: .35, y: .45, r: .32, c: css("--rose"), a: .045, sx: 1, sy: 1 },
+    { x: .65, y: .55, r: .3, c: css("--gamboge"), a: .045, sx: 1, sy: 1 },
+    { x: .5, y: .3, r: .2, c: css("--cerulean"), a: .035, sx: 1, sy: 1 }
+  ], 5, { instant: true });
+  setTimeout(() => sayHi(0), reduceMotion ? 0 : 800);
+  big.addEventListener("click", () => {
+    sfx.boing();
+    big.classList.remove("jump"); void big.offsetWidth; big.classList.add("jump");
+    sayHi((hiIdx + 1) % HI_LINES.length);
+  });
+  document.getElementById("hiGo").addEventListener("click", () => {
+    const w = document.getElementById("welcome");
+    clearTimeout(hiT); clearTimeout(hiAuto);
+    sfx.boing();
+    document.getElementById("hiText").textContent = "Wheee! See you on board!";
+    big.classList.add("leave");
+    setTimeout(() => { w.classList.add("gone"); startGate(); }, reduceMotion ? 0 : 750);
+    setTimeout(() => { w.hidden = true; }, 1600);
+  });
+}
+
+/* ---------- confetti ---------- */
+const confCv = document.getElementById("confetti");
+let confParts = [], confRun = false;
+function confetti(n) {
+  if (reduceMotion) return;
+  const W = window.innerWidth, H = window.innerHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
+  if (!confRun) { confCv.width = W * dpr; confCv.height = H * dpr; }
+  const ctx = confCv.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const cols = ["--rose", "--gamboge", "--cerulean", "--turquoise", "--vermilion", "--sap"].map(css);
+  for (let i = 0; i < n; i++) confParts.push({
+    x: Math.random() * W, y: -20 - Math.random() * H * .6, vx: (Math.random() - .5) * 2.4, vy: 2.2 + Math.random() * 3,
+    r: Math.random() * 6.28, vr: (Math.random() - .5) * .25, w: 7 + Math.random() * 7, h: 10 + Math.random() * 9, c: cols[i % cols.length], sw: Math.random() * 6.28
+  });
+  if (confRun) return;
+  confRun = true;
+  const tick = () => {
+    ctx.clearRect(0, 0, W, H);
+    for (const p of confParts) {
+      p.sw += .06; p.x += p.vx + Math.sin(p.sw) * .9; p.y += p.vy; p.r += p.vr;
+      const k = Math.abs(Math.cos(p.sw));
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r);
+      ctx.globalAlpha = .9; ctx.fillStyle = p.c; ctx.fillRect(-p.w / 2, -p.h * k / 2, p.w, p.h * k + 1);
+      ctx.restore();
+    }
+    confParts = confParts.filter(p => p.y < H + 30);
+    if (confParts.length) requestAnimationFrame(tick);
+    else { confRun = false; ctx.clearRect(0, 0, W, H); }
+  };
+  requestAnimationFrame(tick);
+}
+
+/* ---------- sound toggle ---------- */
+const sBtn = document.getElementById("soundToggle");
+function renderSound() {
+  sBtn.classList.toggle("muted", !soundOn);
+  sBtn.setAttribute("aria-label", soundOn ? "Sound on. Tap to mute" : "Sound off. Tap to turn on");
+}
+sBtn.addEventListener("click", () => {
+  soundOn = !soundOn;
+  try { localStorage.setItem("mum55-sound", soundOn ? "on" : "off"); } catch (e) {}
+  renderSound();
+  if (soundOn) sfx.pop();
+});
+renderSound();
+
+/* ---------- arrivals as she scrolls, planes flying the legs ---------- */
+function flyPlane(leg) {
+  const path = leg.querySelector(".path"), plane = leg.querySelector(".plane-g");
+  if (!path || !plane || !path.getTotalLength) return;
+  const L = path.getTotalLength(), t0 = performance.now(), dur = 1800;
+  const f = now => {
+    const k = Math.min(1, (now - t0) / dur), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+    const p = path.getPointAtLength(L * e), a = path.getPointAtLength(Math.max(0, L * e - 2)), b = path.getPointAtLength(Math.min(L, L * e + 2));
+    plane.setAttribute("transform", `translate(${p.x} ${p.y}) rotate(${Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI})`);
+    if (k < 1) requestAnimationFrame(f);
+  };
+  requestAnimationFrame(f);
+}
+function setupScrollAnim() {
+  if (!("IntersectionObserver" in window) || reduceMotion) return;
+  document.documentElement.classList.add("js-anim");
+  const io = new IntersectionObserver(es => es.forEach(en => {
+    if (!en.isIntersecting) return;
+    en.target.classList.add("in"); io.unobserve(en.target);
+    if (en.target.classList.contains("leg")) flyPlane(en.target);
+  }), { rootMargin: "0px 0px -6% 0px" });
+  document.querySelectorAll(".print, .stop-head, .leg").forEach(el => io.observe(el));
+}
+
+/* ---------- memory lane ---------- */
+const MEM = ["photos/china/disneyland-selfie.jpg", "photos/china/hamdy-on-the-bund.jpg", "photos/italy/duomo-at-night.jpg",
+  "photos/germany/tv-tower-from-above.jpg", "photos/egypt/pyramids.jpg", "photos/egypt/the-lighthouse.jpg"];
+const cardBack = `<svg viewBox="0 0 92 92" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3"><circle cx="46" cy="46" r="34"/><ellipse cx="46" cy="46" rx="14" ry="34"/><path d="M12 46h68M17 29h58M17 63h58"/></svg>`;
+let memFirst = null, memLock = false, memMoves = 0, memPairs = 0;
+function memStats() { document.getElementById("memMoves").textContent = memMoves; document.getElementById("memPairs").textContent = memPairs; }
+function buildMemory() {
+  const grid = document.getElementById("memGrid");
+  grid.innerHTML = ""; memFirst = null; memLock = false; memMoves = 0; memPairs = 0; memStats();
+  document.getElementById("memMsg").textContent = "";
+  const deck = [...MEM.keys(), ...MEM.keys()];
+  for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; }
+  deck.forEach((k, i) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "card"; b.dataset.k = k; b.id = "card-" + i;
+    b.setAttribute("aria-label", "Face-down memory card");
+    b.innerHTML = `<span class="card-inner"><span class="face back">${cardBack}</span><span class="face front"><img src="${MEM[k]}" alt="" loading="lazy" decoding="async"></span></span>`;
+    grid.appendChild(b);
+  });
+}
+document.getElementById("memGrid").addEventListener("click", e => {
+  const card = e.target.closest(".card");
+  if (!card || memLock || card.classList.contains("flipped") || card.classList.contains("matched")) return;
+  card.classList.add("flipped"); card.setAttribute("aria-label", "Memory card, face up");
+  sfx.pop();
+  if (!memFirst) { memFirst = card; return; }
+  memMoves++;
+  if (memFirst.dataset.k === card.dataset.k) {
+    [memFirst, card].forEach(c => { c.classList.add("matched"); c.setAttribute("aria-label", "Matched memory"); });
+    memFirst = null; memPairs++;
+    sfx.sparkle();
+    if (memPairs === MEM.length) {
+      document.getElementById("memMsg").textContent = `All six pairs in ${memMoves} moves! Hamdy is very impressed.`;
+      setTimeout(() => sfx.win(), 300); confetti(120);
+    }
+  } else {
+    memLock = true;
+    const a = memFirst; memFirst = null;
+    setTimeout(() => {
+      [a, card].forEach(c => { c.classList.remove("flipped"); c.setAttribute("aria-label", "Face-down memory card"); });
+      memLock = false;
+    }, 950);
+  }
+  memStats();
+});
+document.getElementById("memReset").addEventListener("click", buildMemory);
 
 /* ---------- boot ---------- */
 build();
@@ -1533,10 +1850,13 @@ document.querySelectorAll(".spot").forEach(sp => { if (progress.hamdy.includes(s
 updateHud(false);
 wirePhotos();
 countdown(); setInterval(countdown, 30000);
-sizePaintCanvas(); seedPainting();
+sizePaintCanvas();
 paintCover();
 paintGlobe(true);
 paintStops(true);
+setupScrollAnim();
+buildMemory();
+initWelcome();
 document.documentElement.classList.add("locked");
 
 let lastW = window.innerWidth, rt;
@@ -1546,7 +1866,6 @@ window.addEventListener("resize", () => {
     if (Math.abs(window.innerWidth - lastW) < 40) return;
     lastW = window.innerWidth;
     paintCover(); paintGlobe(true); paintStops(false); sizePaintCanvas();
-    document.querySelectorAll(".print[data-ready]").forEach(f => makeSketch(f));
   }, 200);
 });
 </script>
